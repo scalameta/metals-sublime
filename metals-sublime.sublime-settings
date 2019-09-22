@@ -1,0 +1,12 @@
+{
+  // The version of the Metals server artifact. Requires restarting sublime.
+  "server_version": "0.7.5",
+
+  // Optional array of properties to pass along to the Metals server.
+  // Example: `-Dhttps.proxyHost=… -Dhttps.proxyPort=…` or `-Dmetals.statistics=all`
+  // check https://scalameta.org/metals/docs/editors/new-editor.html#metals-server-properties for all properties
+  "server_properties": [],
+
+  // Optional path to the Java home directory. Requires reloading sublime.
+  "java_home": ""
+}
