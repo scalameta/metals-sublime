@@ -5,7 +5,11 @@
   // Optional array of properties to pass along to the Metals server.
   // Example: `-Dhttps.proxyHost=… -Dhttps.proxyPort=…` or `-Dmetals.statistics=all`
   // check https://scalameta.org/metals/docs/editors/new-editor.html#metals-server-properties for all properties
-  "server_properties": [],
+  "server_properties": [
+    "-Dmetals.client=sublime",
+    "-Xss4m",
+    "-Xms100m"
+  ],
 
   // Optional path to the Java home directory. Requires reloading sublime.
   "java_home": ""
