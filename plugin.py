@@ -4,15 +4,8 @@ import sublime
 from LSP.plugin.core.handlers import LanguageHandler
 from LSP.plugin.core.settings import ClientConfig, LanguageConfig
 
-config_name = 'metals-sublime'
 server_name = 'metals-sublime'
-service_name = "metals-sublime"
-coursierPath = os.path.join(os.path.dirname(__file__), './coursier')
-service_path = []
-
-def metals_is_running() -> bool:
-    return shutil.which(service_name) is not None
-
+settings_file = 'metals-sublime.sublime-settings'
 def get_java_path(java_path: 'Optional[str]') -> 'Optional[str]':
     if java_path:
         return java_path + "/bin/java"
@@ -22,9 +15,7 @@ def get_java_path(java_path: 'Optional[str]') -> 'Optional[str]':
         return None
 
 def plugin_loaded():
-    global service_path
-    plugin_settings = sublime.load_settings("metals-sublime.sublime-settings")
-
+    plugin_settings = sublime.load_settings(settings_file)
     java_path = get_java_path(plugin_settings.get('java_home'))
     if not java_path :
         window.status_message("Please install java or set the 'java_home' setting")
@@ -33,45 +24,50 @@ def plugin_loaded():
     if not server_version :
         window.status_message("'server_version' should be set")
 
-    server_properties = prepare_server_properties(plugin_settings.get('server_properties', []))
-
-    service_path = [
-        java_path,
+def create_launch_command(artifactVersion: str):
+    coursierPath = os.path.join(os.path.dirname(__file__), './coursier')
+    command = [
+        "java",
+        "-Dmetals.client=sublime",
+        "-Xss4m",
+        "-Xms100m",
         "-jar",
         coursierPath,
-        "fetch",
-        "-p",
+        "launch",
         "--ttl",
         "Inf",
-        "org.scalameta:metals_2.12:{}".format(server_version),
-        "-r",
+        "--repository",
         "bintray:scalacenter/releases",
-        "-r",
-        "sonatype:public",
-        "-r",
+        "--repository",
         "sonatype:snapshots",
-        "-p"
+        "--main-class",
+        "scala.meta.metals.Main",
+        "org.scalameta:metals_2.12:{}".format(artifactVersion)
     ]
-
-metals_config = ClientConfig(
-    name=config_name,
-    binary_args=service_path,
-    tcp_port=None,
-    languages=[
-        LanguageConfig(
-            "scala",
-            ["source.scala"],
-            ["Packages/Scala/Scala.sublime-syntax"]
-        )
-    ],
-    enabled=False,
-    init_options=dict(),
-    settings=dict(),
-    env=dict())
+    return command
 
 class LspMetalsPlugin(LanguageHandler):
     def __init__(self):
-        self._name = config_name
+        plugin_settings = sublime.load_settings(settings_file)
+        server_version = plugin_settings.get('server_version')
+        server_properties = prepare_server_properties(plugin_settings.get('server_properties', []))
+        launch_command = create_launch_command(server_version)
+        metals_config = ClientConfig(
+            name=server_name,
+            binary_args=launch_command,
+            tcp_port=None,
+            languages=[
+                LanguageConfig(
+                    "scala",
+                    ["source.scala"],
+                    ["Packages/Scala/Scala.sublime-syntax"]
+                )
+            ],
+            enabled=False,
+            init_options=dict(),
+            settings=dict(),
+            env=dict())
+        self._name = server_name
         self._config = metals_config
 
     @property
@@ -83,17 +79,6 @@ class LspMetalsPlugin(LanguageHandler):
         return self._config
 
     def on_start(self, window) -> bool:
-        plugin_settings = sublime.load_settings("metals-sublime.sublime-settings")
-
-        # if not metals_is_running():
-        #     window.status_message(
-        #         "Metals must be installed to run {}".format(server_name))
-        #     return False
-
-        print("#### {}".format(service_path))
-        if not service_path:
-            return False
-
         return True
 
     def on_initialized(self, client) -> None:
