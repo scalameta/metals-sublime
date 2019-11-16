@@ -2,12 +2,8 @@
 A sublime plugin for [Metals](https://scalameta.org/metals/) proving status bar support and other custom Metals LSP endpoints.
 
 # Installation and usage
-1. install sublime [LSP](https://github.com/tomv564/LSP) plugin
-2. Clone the project into the Packages directory of sublime. 
-```
-# macOS
-~/Library/Application\ Support/Sublime\ Text\ 3/Packages/
-# Ubuntu
-~/.config/sublime-text-3/Packages/
-```
-3. Enable "metals-sublime" in your scala project
+1. Install sublime [LSP](https://github.com/tomv564/LSP) plugin
+2. In sublime's command palette type `Package Control: Add Repository`
+3. At the bottom of the Sublime window, an input box will appear. Paste the URL of this repository (https://github.com/scalameta/metals-sublime)
+4. In sublime's command palette type `Package Control: Install Packages` and select `metals-sublime`
+5. Finally enable "metals-sublime" in your scala project via the command palette
