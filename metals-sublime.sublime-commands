@@ -1,0 +1,6 @@
+[
+    { "caption": "LSP-metals: Build Import", "command": "lsp_execute", "args":{"command_name": "build-import"}},
+    { "caption": "LSP-metals: Build Connect", "command": "lsp_execute", "args":{"command_name": "build-connect"}},
+    { "caption": "LSP-metals: Source Scan", "command": "lsp_execute", "args":{"command_name": "sources-scan"}},
+    { "caption": "LSP-metals: Doctor Run", "command": "lsp_execute", "args":{"command_name": "doctor-run"}}
+]
