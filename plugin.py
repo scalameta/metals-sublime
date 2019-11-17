@@ -55,7 +55,7 @@ class LspMetalsPlugin(LanguageHandler):
                     ["Packages/Scala/Scala.sublime-syntax"]
                 )
             ],
-            enabled=False,
+            enabled=True,
             init_options=dict(),
             settings=dict(),
             env=dict())
