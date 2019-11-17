@@ -1,6 +1,6 @@
 {
   // The version of the Metals server artifact. Requires restarting sublime.
-  "server_version": "0.7.6+13-4eb048c9-SNAPSHOT",
+  "server_version": "0.7.6",
 
   // Optional array of properties to pass along to the Metals server.
   // Example: `-Dhttps.proxyHost=… -Dhttps.proxyPort=…` or `-Dmetals.statistics=all`
