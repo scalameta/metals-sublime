@@ -3,6 +3,9 @@ import os
 import sublime
 from LSP.plugin.core.handlers import LanguageHandler
 from LSP.plugin.core.settings import ClientConfig, LanguageConfig
+from LSP.plugin.core.url import uri_to_filename
+from LSP.plugin.core.protocol import Location
+
 
 server_name = 'metals-sublime'
 settings_file = 'metals-sublime.sublime-settings'
@@ -92,6 +95,9 @@ def register_client(client):
     client.on_notification(
         "metals/status",
         lambda params: on_metals_status(params))
+    client.on_notification(
+        "metals/executeClientCommand",
+        lambda params: on_execute_client_command(params))
 
 def on_metals_status(params):
     view = sublime.active_window().active_view()
@@ -100,6 +106,22 @@ def on_metals_status(params):
         view.erase_status(server_name)
     else:
         view.set_status(server_name, params.get('text', ''))
+
+def _open_file(location: Location):
+    file_path = location.file_path
+    row = location.range.start.row + 1
+    col = location.range.start.col + 1
+    encoded_file_name = "{}:{}:{}".format(file_path, row, col)
+    window = sublime.active_window()
+    window.open_file(encoded_file_name, sublime.ENCODED_POSITION)
+
+def on_execute_client_command(params):
+    # handle https://scalameta.org/metals/docs/editors/new-editor.html#goto-location-1
+    if(params.get('command') == "metals-goto-location"):
+        args = params.get('arguments', [])
+        if(args):
+            location = Location.from_lsp(args[0])
+            _open_file(location)
 
 def prepare_server_properties(properties: 'List[str]') -> 'List[str]':
     stripped = map(lambda p: p.strip(), properties)

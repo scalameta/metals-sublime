@@ -8,6 +8,7 @@
   "server_properties": [
     "-Dmetals.client=sublime",
     "-Dmetals.status-bar=on",
+    "-Dmetals.execute-client-command=on",
     "-Xss4m",
     "-Xms100m"
   ],
