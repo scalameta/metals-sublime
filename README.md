@@ -146,7 +146,7 @@ Information about your workspace build like compilation errors count, build stat
 If you have any questions or issues with LSP-metals, please submit an
 [issue](https://github.com/scalameta/metals-sublime/issues) in this repository if it is related to the extension. 
 
-If the issues is general to Metals, please submit it
+If the issue is general to Metals, please submit it
 in the [Metals issue repo](https://github.com/scalameta/metals/issues). 
 
 If you have any feature requests, we also have a feature request [issue
