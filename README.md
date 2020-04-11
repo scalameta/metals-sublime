@@ -122,7 +122,7 @@ To troubleshoot problems with your build workspace, run `Doctor run` in the comm
 
 ### Show document symbols
 
-Run the `Document Symbols` command to show a symbol outline for the current file. You can also set key binding for the `lsp_document_symbols` command
+Run the `Document Symbols` command to show a symbol outline for the current file. You can also set a key binding for the `lsp_document_symbols` command
 
 ![Document Symbols](https://i.imgur.com/z5mqk8D.gif)
 
