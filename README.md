@@ -128,7 +128,7 @@ Run the `Document Symbols` command to show a symbol outline for the current file
 
 ### Formatting on save
 
-If you'd like to have `LSP-metals` formatting your file on document save then make sure to add this setting to your Sublime settings, Syntax-specific settings and/or in Project files. 
+If you'd like to have `LSP-metals` format your file on document save then make sure to add this setting to your Sublime settings, Syntax-specific settings and/or in Project files. 
 
 ```
 "lsp_format_on_save": true,
