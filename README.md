@@ -51,7 +51,7 @@ build. Click "Import build" to start the installation step.
 - "Not now" disables this prompt for 2 minutes.
 - "Don't show again" disables this prompt forever, use rm -rf .metals/ to
     re-enable the prompt.
-- Run `lsp toggle server panel` in the command palette to watch the build import progress. You can optionally add key binding for this command.
+- Run `lsp toggle server panel` in the command palette to watch the build import progress. You can optionally add a key binding for this command.
 - Behind the scenes, Metals uses Bloop to import sbt builds, but you don't need
     Bloop installed on your machine to run this step.
 
@@ -151,4 +151,3 @@ in the [Metals issue repo](https://github.com/scalameta/metals/issues).
 
 If you have any feature requests, we also have a feature request [issue
 repo](https://github.com/scalameta/metals-feature-requests). 
-
