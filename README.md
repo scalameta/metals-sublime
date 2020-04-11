@@ -82,7 +82,7 @@ Configure the metals language server by accessing `Preferences > Package Setting
 ![config](https://i.imgur.com/WFSJKV0.png)
 
 #### Java version
-The `LSP-metals` extension uses by default the `JAVA_HOME` environment variable
+The `LSP-metals` extension by default uses the `JAVA_HOME` environment variable
 (via [`environ`](https://docs.python.org/3/library/os.html#os.environ)), otherwise uses [which](https://docs.python.org/3/library/shutil.html#shutil.which) to locate the `java` executable.
 
 If no `JAVA_HOME` is detected you can then open Settings by following the
