@@ -12,12 +12,17 @@ settings_file = 'metals-sublime.sublime-settings'
 coursierPath = os.path.join(os.path.dirname(__file__), './coursier')
 
 def get_java_path(java_path: 'Optional[str]') -> 'Optional[str]':
+    path = None
+    java_home = os.environ.get('JAVA_HOME')
+
     if java_path:
-        return java_path + "/bin/java"
+        path = java_path + "/bin/java"
+    elif java_home:
+        path = java_home + "/bin/java"
     elif shutil.which("java") is not None:
-        return "java"
-    else:
-        return None
+        path = "java"
+
+    return path
 
 def create_launch_command(java_path: str, artifactVersion: str, serverProperties: 'List[str]') -> 'List[str]':
     command = [java_path] + serverProperties + [
@@ -38,6 +43,7 @@ def create_launch_command(java_path: str, artifactVersion: str, serverProperties
 
 class LspMetalsPlugin(LanguageHandler):
     def __init__(self):
+        missing_java_home = "Unable to find a Java 8 or Java 11 installation on this computer. Please set `java_home` in the settings."
         plugin_settings = sublime.load_settings(settings_file)
         server_version = plugin_settings.get('server_version')
         server_properties = prepare_server_properties(plugin_settings.get('server_properties', []))
@@ -46,6 +52,8 @@ class LspMetalsPlugin(LanguageHandler):
         launch_command = []
         if java_path and server_version :
             launch_command = create_launch_command(java_path, server_version, server_properties)
+        if java_path is None:
+            sublime.error_message(missing_java_home)
 
         metals_config = ClientConfig(
             name=server_name,

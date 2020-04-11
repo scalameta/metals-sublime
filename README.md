@@ -1,10 +1,154 @@
-# About
+# LSP-Metals
 
-[Metals](https://scalameta.org/metals/) support for Sublime's [LSP](https://github.com/tomv564/LSP) plugin. Providing status bar support and other custom Metals LSP endpoints.
+![lsp-metals](https://i.imgur.com/vJKP0T3.gif)
 
-* Install [LSP](https://packagecontrol.io/packages/LSP) and `LSP-metals` from Package Control.
-* Restart Sublime.
+`LSP-metals` is the recommended `LSP` extension for [Metals](https://scalameta.org/metals/), the Scala language server. `LSP-metals` offers automated Metals installation, easy configuration, Metals-specific commands and many other small features.
+
+<a href="https://gitter.im/scalameta/metals">
+<img alt="Join the chat on Gitter" src="https://img.shields.io/gitter/room/scalameta/metals.svg?logo=gitter&style=flat-square&color=F71263" />
+</a>
+
+## Table of Contents
+  - [Requirements](#requirements)
+  - [Installing LSP-metals](#installing-lsp-metals)
+  - [Importing a build](#importing-a-build)
+    - [Speeding up import](#speeding-up-import)
+    - [Importing changes](#importing-changes)
+  - [Configuration](#configuration)
+    - [Java version](#java-version)
+    - [Server version](#server-version)
+  - [Workplace Diagnostic](#workplace-diagnostic)
+  - [Run doctor](#run-doctor)
+  - [All Available Commands](#all-available-commands)
+  - [Show document symbols](#show-document-symbols)
+  - [Formatting on save](#formatting-on-save)
+  - [Status Bar](#status-bar)
+  - [Troubleshooting](#troubleshooting)
+
+
+
+### Requirements
+
+- Sublime text 3 or above
+- [LSP](https://github.com/tomv564/LSP) package: `Command Palette (Cmd + Shift + P) > Install package > LSP`
+- Java 8 or 11 provided by OpenJDK or Oracle. Eclipse OpenJ9 is not supported,
+    please make sure the JAVA_HOME environment variable points to a valid Java 8 or
+    11 installation.
+
+### Installing LSP-metals
+
+Once you have `LSP` installed, you can then install Metals via
+
+`Command Palette (Cmd + Shift + P) > Install package > LSP-metals`
+
+### Importing a build
+
+The first time you open Metals in a new workspace it prompts you to import the
+build. Click "Import build" to start the installation step.
+
+![Build Import](https://i.imgur.com/eUk30Zy.png)
+
+- "Not now" disables this prompt for 2 minutes.
+- "Don't show again" disables this prompt forever, use rm -rf .metals/ to
+    re-enable the prompt.
+- Run `lsp toggle server panel` in the command palette to watch the build import progress. You can optionally add key binding for this command.
+- Behind the scenes, Metals uses Bloop to import sbt builds, but you don't need
+    Bloop installed on your machine to run this step.
+
+Once the import step completes, compilation starts for your open *.scala files.
+
+Once the sources have compiled successfully, you can navigate the codebase with
+goto definition.
+
+#### Speeding up import
+
+The "Import build" step can take a long time, especially the first time you run
+it in a new build.  The exact time depends on the complexity of the build and if
+library dependencies need to be downloaded. For example, this step can take
+everything from 10 seconds in small cached builds up to 10-15 minutes in large
+uncached builds.
+
+Consult the Bloop [documentation](https://scalacenter.github.io/bloop/docs/what-is-bloop) to learn how to speed up build import.
+
+#### Importing changes
+
+When you change build.sbt or sources under project/, you will be prompted to
+re-import the build.
 
 ### Configuration
 
 Configure the metals language server by accessing `Preferences > Package Settings > LSP > Servers > LSP-metals`.
+
+![config](https://i.imgur.com/WFSJKV0.png)
+
+#### Java version
+The `LSP-metals` extension uses by default the `JAVA_HOME` environment variable
+(via [`environ`](https://docs.python.org/3/library/os.html#os.environ)), otherwise uses [which](https://docs.python.org/3/library/shutil.html#shutil.which) to locate the `java` executable.
+
+If no `JAVA_HOME` is detected you can then open Settings by following the
+instructions in the displayed error message.
+
+![No Java Home](https://i.imgur.com/yLrqzGP.png)
+
+
+#### Server version
+
+To use the latest Metals SNAPSHOT update the `server_version` setting to try out the latest pending Metals features.
+After updating the version, you need to restart sublime.
+
+### Workplace Diagnostic
+
+To see all compilation errors and warnings in the workspace, run the following command `Toggle Diagnostics Panel` Or use the default mapping `super+shift+M` / `ctr+alt+M`
+
+To cycle through the diagnostic use the default mapping Next `F4` / Previous `shift+F4` 
+
+![diagnostic](https://i.imgur.com/uRSLJJ0.gif)
+
+### Run doctor
+
+To troubleshoot problems with your build workspace, run `Doctor run` in the command pallet. This command opens a browser window.
+
+![Run Doctor Command](https://i.imgur.com/yelm0jd.png)
+
+
+### All Available Commands
+
+  - [Build Import](https://scalameta.org/metals/docs/editors/new-editor.html#import-build)
+  - [Build Connect](https://scalameta.org/metals/docs/editors/new-editor.html#connect-to-build-server)
+  - [compile Cascade](https://scalameta.org/metals/docs/editors/new-editor.html#cascade-compile)
+  - [Compile Cancel](https://scalameta.org/metals/docs/editors/new-editor.html#cancel-compilation)
+  - [Doctor Run](https://scalameta.org/metals/docs/editors/new-editor.html#run-doctor)
+
+
+### Show document symbols
+
+Run the `Document Symbols` command to show a symbol outline for the current file. You can also set key binding for the `lsp_document_symbols` command
+
+![Document Symbols](https://i.imgur.com/z5mqk8D.gif)
+
+### Formatting on save
+
+If you'd like to have `LSP-metals` formatting your file on document save then make sure to add this setting to your Sublime settings, Syntax-specific settings and/or in Project files. 
+
+```
+"lsp_format_on_save": true,
+...
+```
+
+### Status Bar
+
+Information about your workspace build like compilation errors count, build status, etc. are displayed by Metals in the sublime status bar.
+
+![Status bar info](https://i.imgur.com/0mIi6XB.gif)
+
+### Troubleshooting
+
+If you have any questions or issues with LSP-metals, please submit an
+[issue](https://github.com/scalameta/metals-sublime/issues) in this repository if it is related to the extension. 
+
+If the issues is general to Metals, please submit it
+in the [Metals issue repo](https://github.com/scalameta/metals/issues). 
+
+If you have any feature requests, we also have a feature request [issue
+repo](https://github.com/scalameta/metals-feature-requests). 
+
