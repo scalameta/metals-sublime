@@ -55,17 +55,21 @@ class LspMetalsPlugin(LanguageHandler):
         if java_path is None:
             sublime.error_message(missing_java_home)
 
+        try:
+            # ST4
+            language = LanguageConfig("scala")
+        except TypeError:
+            # ST3
+            language = LanguageConfig(
+                language_id="scala",
+                scopes=["source.scala"],
+                syntaxes=["Packages/Scala/Scala.sublime-syntax"])
+
         metals_config = ClientConfig(
             name=server_name,
             binary_args=launch_command,
             tcp_port=None,
-            languages=[
-                LanguageConfig(
-                    "scala",
-                    ["source.scala"],
-                    ["Packages/Scala/Scala.sublime-syntax"]
-                )
-            ],
+            languages=[language],
             enabled=True,
             init_options=dict(),
             settings=dict(),
