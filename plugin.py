@@ -7,8 +7,8 @@ from LSP.plugin.core.url import uri_to_filename
 from LSP.plugin.core.protocol import Location
 
 
-server_name = 'metals-sublime'
-settings_file = 'metals-sublime.sublime-settings'
+server_name = 'LSP-metals'
+settings_file = 'LSP-metals.sublime-settings'
 coursierPath = os.path.join(os.path.dirname(__file__), './coursier')
 
 def get_java_path(java_path: 'Optional[str]') -> 'Optional[str]':

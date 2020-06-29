@@ -39,7 +39,9 @@
 
 Once you have `LSP` installed, you can then install Metals via
 
-`Command Palette (Cmd + Shift + P) > Install package > LSP-metals`
+- Automatically via package control: `Command Palette (Cmd + Shift + P) > Install package > LSP-metals`
+
+- manually: run `git clone [URL] LSP-metals` in your sublime packages directory 
 
 ### Importing a build
 
