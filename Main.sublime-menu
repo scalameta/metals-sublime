@@ -19,7 +19,7 @@
                     "caption": "LSP-metals",
                     "command": "edit_settings",
                     "args": {
-                      "base_file": "${packages}/metals-sublime/metals-sublime.sublime-settings",
+                      "base_file": "${packages}/LSP-metals/LSP-metals.sublime-settings",
                       "default": "{\n\t$0\n}\n"
                     }
                   }
