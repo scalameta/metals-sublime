@@ -116,12 +116,8 @@ def register_client(client):
 
 def on_metals_inputbox(client, params, request_id):
     def send_response(input: 'Optional[str]' = None):
-        if input:
-            param = { 'value': input, 'cancelled': False }
-        else:
-            param = {'cancelled': True}
-        response = Response(request_id, param)
-        client.send_response(response)
+        param = { 'value': input, 'cancelled': False } if input else {'cancelled': True}
+        client.send_response(Response(request_id, param))
 
     sublime.active_window().show_input_panel(
         params.get('prompt', ''),
