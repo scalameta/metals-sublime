@@ -3,5 +3,6 @@
     { "caption": "LSP-metals: Build Connect", "command": "lsp_execute", "args":{"command_name": "build-connect"}},
     { "caption": "LSP-metals: Compile Cascade", "command": "lsp_execute", "args":{"command_name": "compile-cascade"}},
     { "caption": "LSP-metals: Compile Cancel", "command": "lsp_execute", "args":{"command_name": "compile-cancel"}},
-    { "caption": "LSP-metals: Doctor Run", "command": "lsp_execute", "args":{"command_name": "doctor-run"}}
+    { "caption": "LSP-metals: Doctor Run", "command": "lsp_execute", "args":{"command_name": "doctor-run"}},
+    { "caption": "LSP-metals: New Scala File", "command": "new_scala_file", "args":{"paths": []}}
 ]

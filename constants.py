@@ -1,3 +1,3 @@
 init_options = {
-  'inputBoxProvider': True
+    'inputBoxProvider': True
 }
