@@ -116,9 +116,10 @@ def register_client(client):
 
 def on_metals_inputbox(client, params, request_id):
     def send_response(input: 'Optional[str]' = None):
-        param = {'cancelled': True}
         if input:
-            param.update({'value': input, 'cancelled': False })
+            param = { 'value': input, 'cancelled': False }
+        else:
+            param = {'cancelled': True}
         response = Response(request_id, param)
         client.send_response(response)
 
