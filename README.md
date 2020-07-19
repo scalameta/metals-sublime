@@ -115,11 +115,14 @@ To troubleshoot problems with your build workspace, run `Doctor run` in the comm
 
 ### All Available Commands
 
+The following commands can be invoked simply via the sublime command palette.
+
   - [Build Import](https://scalameta.org/metals/docs/editors/new-editor.html#import-build)
   - [Build Connect](https://scalameta.org/metals/docs/editors/new-editor.html#connect-to-build-server)
   - [compile Cascade](https://scalameta.org/metals/docs/editors/new-editor.html#cascade-compile)
   - [Compile Cancel](https://scalameta.org/metals/docs/editors/new-editor.html#cancel-compilation)
   - [Doctor Run](https://scalameta.org/metals/docs/editors/new-editor.html#run-doctor)
+  - [New Scala File](https://scalameta.org/metals/docs/editors/new-editor.html#create-new-scala-file): Also available in the side bar context menu. ![Peek 2020-07-19 16-48](https://user-images.githubusercontent.com/1632384/87877673-e5e37300-c9df-11ea-9516-6fccb221e3f6.gif) 
 
 
 ### Show document symbols
