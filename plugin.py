@@ -4,8 +4,8 @@ import sublime
 from LSP.plugin.core.handlers import LanguageHandler
 from LSP.plugin.core.settings import ClientConfig, LanguageConfig
 from LSP.plugin.core.url import uri_to_filename
-from LSP.plugin.core.protocol import Location
-
+from LSP.plugin.core.protocol import Location, Response
+from .constants import init_options
 
 server_name = 'LSP-metals'
 settings_file = 'LSP-metals.sublime-settings'
@@ -71,7 +71,7 @@ class LspMetalsPlugin(LanguageHandler):
             tcp_port=None,
             languages=[language],
             enabled=True,
-            init_options=dict(),
+            init_options=init_options,
             settings=dict(),
             env=dict())
         self._name = server_name
@@ -110,6 +110,23 @@ def register_client(client):
     client.on_notification(
         "metals/executeClientCommand",
         lambda params: on_execute_client_command(params))
+    client.on_request(
+        "metals/inputBox",
+        lambda params, request_id: on_metals_inputbox(client, params, request_id))
+
+def on_metals_inputbox(client, params, request_id):
+    def send_response(input: 'Optional[str]' = None):
+        param = { 'value': input, 'cancelled': False } if input else {'cancelled': True}
+        client.send_response(Response(request_id, param))
+
+    sublime.active_window().show_input_panel(
+        params.get('prompt', ''),
+        params.get('value', ''),
+        lambda value: send_response(value),
+        None,
+        lambda: send_response(None)
+    )
+
 
 def on_metals_status(params):
     view = sublime.active_window().active_view()
