@@ -4,5 +4,13 @@
     { "caption": "LSP-metals: Compile Cascade", "command": "lsp_execute", "args":{"command_name": "compile-cascade"}},
     { "caption": "LSP-metals: Compile Cancel", "command": "lsp_execute", "args":{"command_name": "compile-cancel"}},
     { "caption": "LSP-metals: Doctor Run", "command": "lsp_execute", "args":{"command_name": "doctor-run"}},
-    { "caption": "LSP-metals: New Scala File", "command": "new_scala_file", "args":{"paths": []}}
+    { "caption": "LSP-metals: New Scala File", "command": "new_scala_file", "args":{"paths": []}},
+    {
+        "caption": "LSP-metals: Settings",
+        "command": "edit_settings",
+        "args": {
+            "base_file": "${packages}/LSP-metals/LSP-metals.sublime-settings",
+            "default": "{\n\t$0\n}\n"
+        }
+    }
 ]
