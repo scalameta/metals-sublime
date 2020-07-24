@@ -79,7 +79,7 @@ re-import the build.
 
 ### Configuration
 
-Configure the metals language server by accessing `Preferences > Package Settings > LSP > Servers > LSP-metals`.
+You can edit the package settings by running `LSP-metals Settings` in the sublime palette or accessing `Preferences > Package Settings > LSP > Servers > LSP-metals`.
 
 ![config](https://i.imgur.com/WFSJKV0.png)
 
