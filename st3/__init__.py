@@ -10,7 +10,7 @@ import sublime
 
 server_name = 'LSP-metals'
 settings_file = 'LSP-metals.sublime-settings'
-coursierPath = os.path.join(os.path.dirname(__file__), './coursier')
+coursierPath = os.path.join(os.path.dirname(__file__), '..', 'coursier')
 
 
 def create_launch_command(java_path: str, artifactVersion: str, serverProperties: 'List[str]') -> 'List[str]':
@@ -43,17 +43,10 @@ class LspMetalsPlugin(LanguageHandler):
             launch_command = create_launch_command(java_path, server_version, server_properties)
         if java_path is None:
             sublime.error_message(missing_java_home)
-
-        try:
-            # ST4
-            language = LanguageConfig("scala")
-        except TypeError:
-            # ST3
-            language = LanguageConfig(
-                language_id="scala",
-                scopes=["source.scala"],
-                syntaxes=["Packages/Scala/Scala.sublime-syntax"])
-
+        language = LanguageConfig(
+            language_id="scala",
+            scopes=["source.scala"],
+            syntaxes=["Packages/Scala/Scala.sublime-syntax"])
         metals_config = ClientConfig(
             name=server_name,
             binary_args=launch_command,
@@ -76,7 +69,7 @@ class LspMetalsPlugin(LanguageHandler):
 
     def on_start(self, window) -> bool:
         plugin_settings = sublime.load_settings(settings_file)
-        java_path = get_java_path(plugin_settings.get('java_home'))
+        java_path = get_java_path(plugin_settings)
         if not java_path :
             window.status_message("Please install java or set the 'java_home' setting")
             return False
