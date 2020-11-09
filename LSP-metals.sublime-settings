@@ -19,7 +19,7 @@
     "-Xms100m"
   ],
 
-  // initialization options (ST4 only)
+  // initialization options
   "initializationOptions": {
     "inputBoxProvider": true
   }
