@@ -1,34 +1,17 @@
-from threading import settrace
-from LSP.plugin.core.handlers import LanguageHandler
-from LSP.plugin.core.settings import ClientConfig, LanguageConfig
-from LSP.plugin.core.url import uri_to_filename
-from LSP.plugin.core.protocol import Location, Response
+from ..common import create_launch_command
 from ..common import get_java_path
 from ..common import NewScalaFileCommand
+from ..common import prepare_server_properties
+from LSP.plugin.core.collections import DottedDict
+from LSP.plugin.core.handlers import LanguageHandler
+from LSP.plugin.core.protocol import Location, Response
+from LSP.plugin.core.settings import ClientConfig, LanguageConfig
 import os
 import sublime
 
 server_name = 'LSP-metals'
 settings_file = 'LSP-metals.sublime-settings'
-coursierPath = os.path.join(os.path.dirname(__file__), '..', 'coursier')
 
-
-def create_launch_command(java_path: str, artifactVersion: str, serverProperties: 'List[str]') -> 'List[str]':
-    command = [java_path] + serverProperties + [
-        "-jar",
-        coursierPath,
-        "launch",
-        "--ttl",
-        "Inf",
-        "--repository",
-        "bintray:scalacenter/releases",
-        "--repository",
-        "sonatype:snapshots",
-        "--main-class",
-        "scala.meta.metals.Main",
-        "org.scalameta:metals_2.12:{}".format(artifactVersion)
-    ]
-    return command
 
 class LspMetalsPlugin(LanguageHandler):
     def __init__(self):
@@ -43,18 +26,25 @@ class LspMetalsPlugin(LanguageHandler):
             launch_command = create_launch_command(java_path, server_version, server_properties)
         if java_path is None:
             sublime.error_message(missing_java_home)
-        language = LanguageConfig(
-            language_id="scala",
-            scopes=["source.scala"],
-            syntaxes=["Packages/Scala/Scala.sublime-syntax"])
+
+        try:
+            # LSP 1.0
+            language = LanguageConfig("scala")
+        except TypeError:
+            # Ancient LSP
+            language = LanguageConfig(
+                language_id="scala",
+                scopes=["source.scala"],
+                syntaxes=["Packages/Scala/Scala.sublime-syntax"])
+
         metals_config = ClientConfig(
             name=server_name,
             binary_args=launch_command,
             tcp_port=None,
             languages=[language],
             enabled=True,
-            init_options=plugin_settings.get("initializationOptions"),
-            settings=dict(),
+            init_options=DottedDict(plugin_settings.get("initializationOptions")),
+            settings=DottedDict(),
             env=dict())
         self._name = server_name
         self._config = metals_config
@@ -133,8 +123,3 @@ def on_execute_client_command(params):
         if(args):
             location = Location.from_lsp(args[0])
             _open_file(location)
-
-def prepare_server_properties(properties: 'List[str]') -> 'List[str]':
-    stripped = map(lambda p: p.strip(), properties)
-    none_empty = list(filter(None, stripped))
-    return none_empty

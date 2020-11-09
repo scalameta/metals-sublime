@@ -11,35 +11,12 @@
   // Optional array of properties to pass along to the Metals server.
   // Example: `-Dhttps.proxyHost=… -Dhttps.proxyPort=…` or `-Dmetals.statistics=all`
   // check https://scalameta.org/metals/docs/editors/new-editor.html#metals-server-properties for all properties
-  // (ST3 only)
   "server_properties": [
     "-Dmetals.client=sublime",
     "-Dmetals.status-bar=on",
     "-Dmetals.execute-client-command=on",
     "-Xss4m",
     "-Xms100m"
-  ],
-
-  // The startup command (ST4 only)
-  "command": [
-    "${java_path}",
-    "-Dmetals.client=sublime",
-    "-Dmetals.status-bar=on",
-    "-Dmetals.execute-client-command=on",
-    "-Xss4m",
-    "-Xms100m",
-    "-jar",
-    "${packages}/LSP-metals/coursier",
-    "launch",
-    "--ttl",
-    "Inf",
-    "--repository",
-    "bintray:scalacenter/releases",
-    "--repository",
-    "sonatype:snapshots",
-    "--main-class",
-    "scala.meta.metals.Main",
-    "org.scalameta:metals_2.12:${server_version}"
   ],
 
   // initialization options (ST4 only)

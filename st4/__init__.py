@@ -1,10 +1,14 @@
+from ..common import create_launch_command
 from ..common import get_java_path
 from ..common import NewScalaFileCommand
+from ..common import prepare_server_properties
 from LSP.plugin import AbstractPlugin
 from LSP.plugin import register_plugin
 from LSP.plugin import Response
 from LSP.plugin import unregister_plugin
-from LSP.plugin.core.types import Optional, Dict, Any
+from LSP.plugin import WorkspaceFolder
+from LSP.plugin import ClientConfig
+from LSP.plugin.core.types import Optional, Dict, Any, Tuple, List
 import sublime
 
 # TODO: Bring to public API
@@ -18,16 +22,35 @@ class Metals(AbstractPlugin):
         return cls.__name__.lower()
 
     @classmethod
-    def additional_variables(cls) -> Optional[Dict[str, str]]:
-        settings = sublime.load_settings("LSP-metals.sublime-settings")
-        return {
-            "java_path": get_java_path(settings),
-            "server_version": str(settings.get("server_version"))
-        }
+    def configuration(cls) -> Tuple[sublime.Settings, str]:
+        settings, path = super().configuration()
+        java_path = get_java_path(settings)
+        version = settings.get("server_version")
+        properties = prepare_server_properties(settings.get("server_properties"))
+        command = create_launch_command(java_path, version, properties)
+        settings.set("command", command)
+        return settings, path
+
+    @classmethod
+    def can_start(
+        cls,
+        window: sublime.Window,
+        initiating_view: sublime.View,
+        workspace_folders: List[WorkspaceFolder],
+        configuration: ClientConfig
+    ) -> Optional[str]:
+        plugin_settings = sublime.load_settings("LSP-metals.sublime-settings")
+        java_path = get_java_path(plugin_settings)
+        if not java_path :
+            return "Please install java or set the 'java_home' setting"
+        server_version = plugin_settings.get('server_version')
+        if not server_version :
+            return "'server_version' setting should be set"
 
     # notification and request handlers
 
     def m_metals_status(self, params: Any) -> None:
+        """Handle the metals/status notification."""
         if not isinstance(params, dict):
             return
         session = self.weaksession()
@@ -40,7 +63,8 @@ class Metals(AbstractPlugin):
             session.erase_window_status_async(key)
 
     def m_metals_executeClientCommand(self, params: Any) -> None:
-        # handle https://scalameta.org/metals/docs/editors/new-editor.html#goto-location-1
+        """Handle the metals/executeClientCommand notification."""
+        # https://scalameta.org/metals/docs/editors/new-editor.html#goto-location-1
         if not isinstance(params, dict):
             return
         if params.get('command') == "metals-goto-location":
@@ -54,6 +78,7 @@ class Metals(AbstractPlugin):
                     )
 
     def m_metals_inputBox(self, params: Any, request_id: Any) -> None:
+        """Handle the metals/inputBox request."""
         if not isinstance(params, dict):
             return
         session = self.weaksession()
