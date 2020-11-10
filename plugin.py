@@ -14,7 +14,7 @@ else:
         from LSP.plugin import __version__ as v
         if v < (1, 1, 0):
             from .st3 import *
-        elif (1, 1, 0) <= v < (1, 2, 0):
+        elif (1, 1, 0) <= v < (2, 0, 0):
             from .st4 import *
         else:
             fmt = "LSP-metals: unsupported LSP version: {}"
