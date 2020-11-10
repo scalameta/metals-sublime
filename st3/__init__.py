@@ -5,7 +5,7 @@ from ..common import prepare_server_properties
 from LSP.plugin.core.collections import DottedDict
 from LSP.plugin.core.handlers import LanguageHandler
 from LSP.plugin.core.protocol import Location, Response
-from LSP.plugin.core.settings import ClientConfig, LanguageConfig
+from LSP.plugin.core.settings import ClientConfig, LanguageConfig, read_client_config
 import os
 import sublime
 
@@ -14,48 +14,27 @@ settings_file = 'LSP-metals.sublime-settings'
 
 
 class LspMetalsPlugin(LanguageHandler):
-    def __init__(self):
-        missing_java_home = "Unable to find a Java 8 or Java 11 installation on this computer. Please set `java_home` in the settings."
-        plugin_settings = sublime.load_settings(settings_file)
-        server_version = plugin_settings.get('server_version')
-        server_properties = prepare_server_properties(plugin_settings.get('server_properties', []))
-        java_path = get_java_path(plugin_settings)
-
-        launch_command = []
-        if java_path and server_version :
-            launch_command = create_launch_command(java_path, server_version, server_properties)
-        if java_path is None:
-            sublime.error_message(missing_java_home)
-
-        try:
-            # LSP 1.0
-            language = LanguageConfig("scala")
-        except TypeError:
-            # Ancient LSP
-            language = LanguageConfig(
-                language_id="scala",
-                scopes=["source.scala"],
-                syntaxes=["Packages/Scala/Scala.sublime-syntax"])
-
-        metals_config = ClientConfig(
-            name=server_name,
-            binary_args=launch_command,
-            tcp_port=None,
-            languages=[language],
-            enabled=True,
-            init_options=DottedDict(plugin_settings.get("initializationOptions")),
-            settings=DottedDict(),
-            env=dict())
-        self._name = server_name
-        self._config = metals_config
 
     @property
     def name(self) -> str:
-        return self._name
+        return server_name
 
     @property
     def config(self) -> ClientConfig:
-        return self._config
+        settings = sublime.load_settings(settings_file)
+        server_version = settings.get('server_version', '0.9.2')
+        server_properties = prepare_server_properties(settings.get('server_properties', []))
+        java_path = get_java_path(settings)
+        return read_client_config(self.name, {
+            "enabled": True,
+            "command": create_launch_command(java_path, server_version, server_properties),
+            "initializationOptions": settings.get("initializationOptions"),
+            "languages": [{
+                "languageId": "scala",
+                "scopes": ["source.scala"],
+                "syntaxes": ["Packages/Scala/Scala.sublime-syntax"]
+            }]
+        })
 
     def on_start(self, window) -> bool:
         plugin_settings = sublime.load_settings(settings_file)
