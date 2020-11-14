@@ -2,6 +2,12 @@
   // The version of the Metals server artifact. Requires restarting sublime.
   "server_version": "0.9.2",
 
+  // Optional path to the Java home directory. Requires reloading sublime.
+  "java_home": "",
+
+  // Attach to views with base scope source.scala (ST4 only)
+  "selector": "source.scala",
+
   // Optional array of properties to pass along to the Metals server.
   // Example: `-Dhttps.proxyHost=… -Dhttps.proxyPort=…` or `-Dmetals.statistics=all`
   // check https://scalameta.org/metals/docs/editors/new-editor.html#metals-server-properties for all properties
@@ -13,6 +19,8 @@
     "-Xms100m"
   ],
 
-  // Optional path to the Java home directory. Requires reloading sublime.
-  "java_home": ""
+  // initialization options
+  "initializationOptions": {
+    "inputBoxProvider": true
+  }
 }
