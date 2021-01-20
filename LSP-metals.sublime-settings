@@ -10,7 +10,7 @@
 
   // Optional array of properties to pass along to the Metals server.
   // Example: `-Dhttps.proxyHost=… -Dhttps.proxyPort=…` or `-Dmetals.statistics=all`
-  // check https://scalameta.org/metals/docs/editors/new-editor.html#metals-server-properties for all properties
+  // check https://scalameta.org/metals/docs/integrations/new-editor.html#metals-server-properties for all properties
   "server_properties": [
     "-Dmetals.client=sublime",
     "-Dmetals.status-bar=on",
