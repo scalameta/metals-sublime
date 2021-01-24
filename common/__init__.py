@@ -1,5 +1,6 @@
 from LSP.plugin.core.types import Optional, List
-from LSP.plugin.core.url import filename_to_uri
+from LSP.plugin.core.url import filename_to_uri  # TODO: deprecated in a future version
+from LSP.plugin.execute_command import LspExecuteCommand  # TODO: bring to public API
 import os
 import sublime
 import sublime_plugin
@@ -49,4 +50,8 @@ class NewScalaFileCommand(sublime_plugin.TextCommand):
             "command_name": "new-scala-file",
             "command_args": [filename_to_uri(path)]
         }
-        self.view.run_command("lsp_execute", args)
+        self.view.run_command("lsp_metals_execute", args)
+
+
+class LspMetalsExecuteCommand(LspExecuteCommand):
+    session_name = "metals"
