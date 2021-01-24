@@ -1,6 +1,7 @@
 from ..common import create_launch_command
 from ..common import get_java_path
 from ..common import NewScalaFileCommand
+from ..common import LspMetalsExecuteCommand
 from ..common import prepare_server_properties
 from LSP.plugin import AbstractPlugin
 from LSP.plugin import register_plugin

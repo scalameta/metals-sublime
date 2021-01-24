@@ -1,5 +1,6 @@
 from ..common import create_launch_command
 from ..common import get_java_path
+from ..common import LspMetalsExecuteCommand
 from ..common import NewScalaFileCommand
 from ..common import prepare_server_properties
 from LSP.plugin.core.collections import DottedDict
@@ -11,6 +12,7 @@ import sublime
 
 server_name = 'LSP-metals'
 settings_file = 'LSP-metals.sublime-settings'
+LspMetalsExecuteCommand.session_name = server_name
 
 
 class LspMetalsPlugin(LanguageHandler):

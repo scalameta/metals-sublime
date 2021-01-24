@@ -1,10 +1,10 @@
 [
-    { "caption": "LSP-metals: Build Import", "command": "lsp_execute", "args":{"command_name": "build-import"}},
-    { "caption": "LSP-metals: Build Connect", "command": "lsp_execute", "args":{"command_name": "build-connect"}},
-    { "caption": "LSP-metals: Compile Cascade", "command": "lsp_execute", "args":{"command_name": "compile-cascade"}},
-    { "caption": "LSP-metals: Compile Cancel", "command": "lsp_execute", "args":{"command_name": "compile-cancel"}},
-    { "caption": "LSP-metals: Doctor Run", "command": "lsp_execute", "args":{"command_name": "doctor-run"}},
-    { "caption": "LSP-metals: Reset Choice", "command": "lsp_execute", "args":{"command_name": "reset-choice"}},
+    { "caption": "LSP-metals: Build Import", "command": "lsp_metals_execute", "args":{"command_name": "build-import"}},
+    { "caption": "LSP-metals: Build Connect", "command": "lsp_metals_execute", "args":{"command_name": "build-connect"}},
+    { "caption": "LSP-metals: Compile Cascade", "command": "lsp_metals_execute", "args":{"command_name": "compile-cascade"}},
+    { "caption": "LSP-metals: Compile Cancel", "command": "lsp_metals_execute", "args":{"command_name": "compile-cancel"}},
+    { "caption": "LSP-metals: Doctor Run", "command": "lsp_metals_execute", "args":{"command_name": "doctor-run"}},
+    { "caption": "LSP-metals: Reset Choice", "command": "lsp_metals_execute", "args":{"command_name": "reset-choice"}},
     { "caption": "LSP-metals: New Scala File", "command": "new_scala_file", "args":{"paths": []}},
     {
         "caption": "LSP-metals: Settings",
