@@ -40,6 +40,9 @@ class Metals(AbstractPlugin):
         workspace_folders: List[WorkspaceFolder],
         configuration: ClientConfig
     ) -> Optional[str]:
+        if not workspace_folders :
+            return "No workspace detected. Try opening your project at the workspace root."
+
         plugin_settings = sublime.load_settings("LSP-metals.sublime-settings")
         java_path = get_java_path(plugin_settings)
         if not java_path :
