@@ -19,8 +19,18 @@
     "-Xms100m"
   ],
 
+
+  "settings": {
+    "metals": {
+      "show-inferred-type": true,
+      "show-implicit-arguments": true,
+      "show-implicit-conversions-and-classes": true
+    }
+  },
   // initialization options
   "initializationOptions": {
-    "inputBoxProvider": true
+    "inputBoxProvider": true,
+    "decorationProvider": true,
+    "inlineDecorationProvider": true
   }
 }

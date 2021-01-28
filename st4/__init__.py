@@ -3,6 +3,7 @@ from ..common import get_java_path
 from ..common import NewScalaFileCommand
 from ..common import LspMetalsExecuteCommand
 from ..common import prepare_server_properties
+from ..common import decoractions_to_phantom
 from LSP.plugin import AbstractPlugin
 from LSP.plugin import register_plugin
 from LSP.plugin import Response
@@ -11,12 +12,16 @@ from LSP.plugin import WorkspaceFolder
 from LSP.plugin import ClientConfig
 from LSP.plugin.core.types import Optional, Dict, Any, Tuple, List
 import sublime
+from LSP.plugin.core.url import uri_to_filename
 
 # TODO: Bring to public API
 from LSP.plugin.core.views import location_to_encoded_filename
 
 
 class Metals(AbstractPlugin):
+
+    phantom_key = "metals_decoraction"
+    _phantom_sets = {}
 
     @classmethod
     def name(cls) -> str:
@@ -51,6 +56,7 @@ class Metals(AbstractPlugin):
         if not server_version :
             return "'server_version' setting should be set"
 
+
     # notification and request handlers
 
     def m_metals_status(self, params: Any) -> None:
@@ -65,6 +71,34 @@ class Metals(AbstractPlugin):
             session.set_window_status_async(key, params.get('text', ''))
         else:
             session.erase_window_status_async(key)
+
+    def m_metals_publishDecorations(self, decorationsParams: Any) -> None:
+        if not isinstance(decorationsParams, dict):
+            return
+
+        session = self.weaksession()
+        if not session:
+            return
+
+        uri = decorationsParams.get('uri')
+        if not uri:
+            return
+
+        session_buffer = session.get_session_buffer_for_uri_async(uri)
+        if not session_buffer:
+            print("no session builder")
+            return
+
+        for sv in session_buffer.session_views:
+            if(sv.view.file_name() == uri_to_filename(uri)):
+                phantom_set = self._phantom_sets.get(sv.view.id())
+
+                if phantom_set:
+                    phantom_set.update(decoractions_to_phantom(decorationsParams.get('options', []), sv.view))
+                else:
+                    new_phantom_set = sublime.PhantomSet(sv.view, self.phantom_key)
+                    new_phantom_set.update(decoractions_to_phantom(decorationsParams.get('options', []), sv.view))
+                    self._phantom_sets[sv.view.id()] = new_phantom_set
 
     def m_metals_executeClientCommand(self, params: Any) -> None:
         """Handle the metals/executeClientCommand notification."""
