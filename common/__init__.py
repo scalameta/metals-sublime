@@ -52,13 +52,13 @@ PHANTOM_HTML = """
 <div class='phantom'>{}</div>"""
 
 def decoraction_to_phantom(option: Dict[str, Any], view: sublime.View) -> Optional[sublime.Phantom]:
-    start = Point(deep_get(option, 'range', 'start', 'line'), deep_get(option, 'range', 'start', 'character') + 1)
-    end = Point(deep_get(option, 'range', 'end', 'line'), deep_get(option, 'range', 'end', 'character') + 1)
-    region = range_to_region(Range(start, end), view)
+    end = Point(deep_get(option, 'range', 'end', 'line'), deep_get(option, 'range', 'end', 'character'))
+    region = range_to_region(Range(end, end), view)
     hoverMessage = deep_get(option, 'hoverMessage')
     contentText = deep_get(option, 'renderOptions', 'after', 'contentText')
     color = deep_get(option, 'renderOptions', 'after', 'color')
     fontStyle = deep_get(option, 'renderOptions', 'after', 'fontStyle')
+
     return sublime.Phantom(region, PHANTOM_HTML.format(contentText), sublime.LAYOUT_INLINE, None)
 
 def decoractions_to_phantom(options: Dict[str, Any], view: sublime.View) -> List[sublime.Phantom]:
