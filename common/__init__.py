@@ -51,7 +51,7 @@ PHANTOM_HTML = """
 <style>div.phantom {{font-style: italic; color: #00ff73}}</style>
 <div class='phantom'>{}</div>"""
 
-def decoraction_to_phantom(option: Dict[str, Any], view: sublime.View) -> Optional[sublime.Phantom]:
+def decoration_to_phantom(option: Dict[str, Any], view: sublime.View) -> Optional[sublime.Phantom]:
     end = Point(deep_get(option, 'range', 'end', 'line'), deep_get(option, 'range', 'end', 'character'))
     region = range_to_region(Range(end, end), view)
     hoverMessage = deep_get(option, 'hoverMessage')
@@ -61,8 +61,8 @@ def decoraction_to_phantom(option: Dict[str, Any], view: sublime.View) -> Option
 
     return sublime.Phantom(region, PHANTOM_HTML.format(contentText), sublime.LAYOUT_INLINE, None)
 
-def decoractions_to_phantom(options: Dict[str, Any], view: sublime.View) -> List[sublime.Phantom]:
-    return map(lambda o: decoraction_to_phantom(o, view), options)
+def decorations_to_phantom(options: Dict[str, Any], view: sublime.View) -> List[sublime.Phantom]:
+    return map(lambda o: decoration_to_phantom(o, view), options)
 
 
 class NewScalaFileCommand(sublime_plugin.TextCommand):

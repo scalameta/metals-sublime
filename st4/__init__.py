@@ -3,7 +3,7 @@ from ..common import get_java_path
 from ..common import NewScalaFileCommand
 from ..common import LspMetalsExecuteCommand
 from ..common import prepare_server_properties
-from ..common import decoractions_to_phantom
+from ..common import decorations_to_phantom
 from LSP.plugin import AbstractPlugin
 from LSP.plugin import register_plugin
 from LSP.plugin import Response
@@ -90,15 +90,14 @@ class Metals(AbstractPlugin):
             return
 
         for sv in session_buffer.session_views:
-            if(sv.view.file_name() == uri_to_filename(uri)):
-                phantom_set = self._phantom_sets.get(sv.view.id())
+            phantom_set = self._phantom_sets.get(sv.view.id())
 
-                if phantom_set:
-                    phantom_set.update(decoractions_to_phantom(decorationsParams.get('options', []), sv.view))
-                else:
-                    new_phantom_set = sublime.PhantomSet(sv.view, self.phantom_key)
-                    new_phantom_set.update(decoractions_to_phantom(decorationsParams.get('options', []), sv.view))
-                    self._phantom_sets[sv.view.id()] = new_phantom_set
+            if not phantom_set:
+                phantom_set = sublime.PhantomSet(sv.view, self.phantom_key)
+                self._phantom_sets[sv.view.id()] = phantom_set
+
+            phantom_set.update(decorations_to_phantom(decorationsParams.get('options', []), sv.view))
+
 
     def m_metals_executeClientCommand(self, params: Any) -> None:
         """Handle the metals/executeClientCommand notification."""
