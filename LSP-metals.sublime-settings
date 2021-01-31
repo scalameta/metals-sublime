@@ -19,18 +19,19 @@
     "-Xms100m"
   ],
 
-
-  "settings": {
-    "metals": {
-      "show-inferred-type": true,
-      "show-implicit-arguments": true,
-      "show-implicit-conversions-and-classes": true
-    }
-  },
   // initialization options
   "initializationOptions": {
     "inputBoxProvider": true,
-    "decorationProvider": true,
-    "inlineDecorationProvider": true
+    "decorationProvider": false,
+    "inlineDecorationProvider": false // depends on decorationProvider
+  },
+
+
+  "settings": {
+    "metals": {
+      "show-inferred-type": false, // depends on inlineDecorationProvider
+      "show-implicit-arguments": false, // depends on inlineDecorationProvider
+      "show-implicit-conversions-and-classes": false // depends on inlineDecorationProvider
+    }
   }
 }
