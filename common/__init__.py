@@ -3,7 +3,7 @@ from LSP.plugin.core.url import filename_to_uri  # TODO: deprecated in a future 
 from LSP.plugin.execute_command import LspExecuteCommand  # TODO: bring to public API
 from LSP.plugin.core.views import range_to_region
 from LSP.plugin.core.types import Optional, Dict, Any, Tuple, List
-from LSP.plugin.core.protocol import Range, Point
+from LSP.plugin.core.protocol import Range
 import os
 import sublime
 import sublime_plugin
@@ -48,18 +48,19 @@ def deep_get(dictionary: Dict[str, Any], *keys):
     return reduce(lambda d, key: d.get(key) if d else None, keys, dictionary)
 
 PHANTOM_HTML = """
-<style>div.phantom {{font-style: italic; color: #00ff73}}</style>
+<style>div.phantom {{font-style: italic; color: {}}}</style>
 <div class='phantom'>{}</div>"""
 
 def decoration_to_phantom(option: Dict[str, Any], view: sublime.View) -> Optional[sublime.Phantom]:
-    end = Point(deep_get(option, 'range', 'end', 'line'), deep_get(option, 'range', 'end', 'character'))
-    region = range_to_region(Range(end, end), view)
+    region = range_to_region(Range.from_lsp(option['range']), view)
+    region.a = region.b  # make the start point equal to the end point
+
     hoverMessage = deep_get(option, 'hoverMessage')
     contentText = deep_get(option, 'renderOptions', 'after', 'contentText')
-    color = deep_get(option, 'renderOptions', 'after', 'color')
-    fontStyle = deep_get(option, 'renderOptions', 'after', 'fontStyle')
+    color = view.style_for_scope("comment")["foreground"]
+    phantom = sublime.Phantom(region, PHANTOM_HTML.format(color, contentText), sublime.LAYOUT_INLINE, None)
 
-    return sublime.Phantom(region, PHANTOM_HTML.format(contentText), sublime.LAYOUT_INLINE, None)
+    return phantom
 
 def decorations_to_phantom(options: Dict[str, Any], view: sublime.View) -> List[sublime.Phantom]:
     return map(lambda o: decoration_to_phantom(o, view), options)
