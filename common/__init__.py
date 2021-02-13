@@ -50,7 +50,7 @@ def deep_get(dictionary: Dict[str, Any], *keys):
 
 PHANTOM_HTML = """
 <style>div.phantom {{font-style: italic; color: {}}}</style>
-<div class='phantom'>{} {}</div>"""
+<div class='phantom'>{}{}</div>"""
 
 def show_popup(content: Dict[str, Any], view: sublime.View, location: int):
     html = minihtml(view, content, allowed_formats=FORMAT_MARKED_STRING | FORMAT_MARKUP_CONTENT)
@@ -76,7 +76,7 @@ def decoration_to_phantom(option: Dict[str, Any], view: sublime.View) -> Optiona
     link = ''
     point = None
     if hoverMessage:
-        link = "<a href='more'>more</a>"
+        link = " <a href='more'>more</a>"
         point = view.text_point(decorationRange.start.row, decorationRange.start.col)
 
     color = view.style_for_scope("comment")["foreground"]
