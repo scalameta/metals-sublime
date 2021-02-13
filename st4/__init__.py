@@ -85,7 +85,6 @@ class Metals(AbstractPlugin):
 
         session_buffer = session.get_session_buffer_for_uri_async(uri)
         if not session_buffer:
-            print("no session builder")
             return
 
         for sv in session_buffer.session_views:
