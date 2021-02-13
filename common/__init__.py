@@ -54,6 +54,7 @@ PHANTOM_HTML = """
 
 def show_popup(content: Dict[str, Any], view: sublime.View, location: int):
     html = minihtml(view, content, allowed_formats=FORMAT_MARKED_STRING | FORMAT_MARKUP_CONTENT)
+    viewport_width = view.viewport_extent()[0]
     mdpopups.show_popup(
         view,
         html,
@@ -62,7 +63,7 @@ def show_popup(content: Dict[str, Any], view: sublime.View, location: int):
         flags=sublime.HIDE_ON_MOUSE_MOVE_AWAY,
         location=location,
         wrapper_class=css().popups_classname,
-        max_width=800,
+        max_width=viewport_width,
         on_navigate=None)
 
 
