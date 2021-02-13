@@ -21,7 +21,6 @@ from LSP.plugin.core.views import location_to_encoded_filename
 class Metals(AbstractPlugin):
 
     phantom_key = "metals_decoraction"
-    _phantom_sets = {}
 
     @classmethod
     def name(cls) -> str:
@@ -90,11 +89,11 @@ class Metals(AbstractPlugin):
             return
 
         for sv in session_buffer.session_views:
-            phantom_set = self._phantom_sets.get(sv.view.id())
-
-            if not phantom_set:
+            try:
+                phantom_set = getattr(sv, "_lsp_metals_decorations")
+            except AttributeError:
                 phantom_set = sublime.PhantomSet(sv.view, self.phantom_key)
-                self._phantom_sets[sv.view.id()] = phantom_set
+                setattr(sv, "_lsp_metals_decorations", phantom_set)
 
             phantom_set.update(decorations_to_phantom(decorationsParams.get('options', []), sv.view))
 
