@@ -13,14 +13,14 @@
   // check https://scalameta.org/metals/docs/integrations/new-editor.html#metals-server-properties for all properties
   "server_properties": [
     "-Dmetals.client=sublime",
-    "-Dmetals.status-bar=on",
-    "-Dmetals.execute-client-command=on",
     "-Xss4m",
     "-Xms100m"
   ],
 
   // initialization options
   "initializationOptions": {
+    "executeClientCommandProvider": true,
+    "statusBarProvider": true,
     "inputBoxProvider": true,
     // (ST4 only) When enabled, shows worksheet evaluations as Sublime.Phantom instead of code comments.
     "decorationProvider": false,
