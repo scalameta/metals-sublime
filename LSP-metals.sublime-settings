@@ -19,6 +19,7 @@
 
   // initialization options
   "initializationOptions": {
+    "didFocusProvider": true,
     "executeClientCommandProvider": true,
     "statusBarProvider": true,
     "inputBoxProvider": true,
