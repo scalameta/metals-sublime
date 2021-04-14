@@ -22,6 +22,8 @@
   - [All Available Commands](#all-available-commands)
   - [Show document symbols](#show-document-symbols)
   - [Formatting on save](#formatting-on-save)
+  - [Organize imports on save](#organize-imports-on-save)
+  - [Decoration protocol](#decoration-protocol)
   - [Status Bar](#status-bar)
   - [Troubleshooting](#troubleshooting)
 
@@ -140,6 +142,34 @@ If you'd like to have `LSP-metals` format your file on document save then make s
 ...
 ```
 
+### Organize imports on save
+
+If you'd like to have `LSP-metals` organize your imports on document save then make sure to add this to your `LSP` settings.
+
+```
+"lsp_code_actions_on_save":{
+  "source.organizeImports": true
+},
+...
+```
+
+### Decoration protocol
+
+This plugin implements the [Decoration protocol](https://scalameta.org/metals/docs/editors/decoration-protocol.html) (only for ST4) which allows showing worksheet evaluations (instead of comments), as well as inferred types and other info as Sublime Phantom.
+
+To enable this feature enable the following `LSP-metals` settings:
+
+```
+"settings": {
+  "metals": {
+    ...
+    "show-inferred-type": true,
+    "show-implicit-arguments": true,
+    "show-implicit-conversions-and-classes": true
+  }
+}
+
+```
 ### Status Bar
 
 Information about your workspace build like compilation errors count, build status, etc. are displayed by Metals in the sublime status bar.
