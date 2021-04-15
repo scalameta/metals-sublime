@@ -27,10 +27,14 @@ class LspMetalsPlugin(LanguageHandler):
         server_version = settings.get('server_version', '0.9.2')
         server_properties = prepare_server_properties(settings.get('server_properties', []))
         java_path = get_java_path(settings)
+        init_options = settings.get("initializationOptions")
+        # Disable features that aren't available in ST3
+        init_options.update({"decorationProvider": False})
+        init_options.update({"inlineDecorationProvider": False})
         return read_client_config(self.name, {
             "enabled": True,
             "command": create_launch_command(java_path, server_version, server_properties),
-            "initializationOptions": settings.get("initializationOptions"),
+            "initializationOptions": init_options,
             "languages": [{
                 "languageId": "scala",
                 "scopes": ["source.scala"],

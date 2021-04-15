@@ -24,9 +24,9 @@
     "statusBarProvider": true,
     "inputBoxProvider": true,
     // (ST4 only) When enabled, shows worksheet evaluations as Sublime.Phantom instead of code comments.
-    "decorationProvider": false,
+    "decorationProvider": true,
     // (ST4 only) When enabled, inferred types and implicits are shown as as Sublime.Phantom.
-    "inlineDecorationProvider": false
+    "inlineDecorationProvider": true
   },
 
   "settings": {
