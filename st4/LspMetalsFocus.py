@@ -24,7 +24,7 @@ class LspMetalsFocusViewCommand(LspTextCommand):
         if not session:
             return
         uri = session.config.map_client_path_to_server_uri(fname)
-        session.send_notification(Notification("metals/didFocusTextDocument", {"uri": uri}))
+        session.send_notification(Notification("metals/didFocusTextDocument", uri))
 
 
 class ActiveViewListener(sublime_plugin.EventListener):

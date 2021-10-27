@@ -1,6 +1,6 @@
 {
   // The version of the Metals server artifact. Requires restarting sublime.
-  "server_version": "0.9.8",
+  "server_version": "0.10.8",
 
   // Optional path to the Java home directory. Requires reloading sublime.
   "java_home": "",
