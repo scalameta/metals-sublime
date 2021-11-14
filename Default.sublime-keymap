@@ -1,0 +1,7 @@
+[
+    // Show Type annotation on code selection
+    // {
+    //     "command": "lsp_metals_hover_range",
+    //     "keys": ["UNBOUND"]
+    // }
+]
