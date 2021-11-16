@@ -1,4 +1,6 @@
 [
+    { "caption": "LSP-metals: Ammonite Start", "command": "lsp_metals_execute", "args":{"command_name": "ammonite-start"}},
+    { "caption": "LSP-metals: Ammonite Stop", "command": "lsp_metals_execute", "args":{"command_name": "ammonite-stop"}},
     { "caption": "LSP-metals: Build Import", "command": "lsp_metals_execute", "args":{"command_name": "build-import"}},
     { "caption": "LSP-metals: Build Connect", "command": "lsp_metals_execute", "args":{"command_name": "build-connect"}},
     { "caption": "LSP-metals: Compile Cascade", "command": "lsp_metals_execute", "args":{"command_name": "compile-cascade"}},
