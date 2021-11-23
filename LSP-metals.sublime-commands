@@ -5,6 +5,12 @@
     { "caption": "LSP-metals: Compile Cancel", "command": "lsp_metals_execute", "args":{"command_name": "compile-cancel"}},
     { "caption": "LSP-metals: Doctor Run", "command": "lsp_metals_execute", "args":{"command_name": "doctor-run"}},
     { "caption": "LSP-metals: Reset Choice", "command": "lsp_metals_execute", "args":{"command_name": "reset-choice"}},
+    { "caption": "LSP-metals: Show Decoded TASTy", "command": "file_decoder", "args":{"decoding_type": "tasty-decoded"}},
+    { "caption": "LSP-metals: Show decompiled with javap", "command": "file_decoder", "args":{"decoding_type": "javap"}},
+    { "caption": "LSP-metals: Show decompiled with javap verbose", "command": "file_decoder", "args":{"decoding_type": "javap-verbose"}},
+    { "caption": "LSP-metals: Show semanticdb", "command": "file_decoder", "args":{"decoding_type": "semanticdb-compact"}},
+    { "caption": "LSP-metals: Show semanticdb detailed", "command": "file_decoder", "args":{"decoding_type": "semanticdb-detailed"}},
+    { "caption": "LSP-metals: Show semanticdb proto", "command": "file_decoder", "args":{"decoding_type": "semanticdb-proto"}},
     { "caption": "LSP-metals: New Scala File", "command": "new_scala_file", "args":{"paths": []}},
     {
         "caption": "LSP-metals: Settings",
