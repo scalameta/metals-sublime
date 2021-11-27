@@ -13,6 +13,7 @@
     { "caption": "LSP-metals: Show semanticdb", "command": "file_decoder", "args":{"decoding_type": "semanticdb-compact"}},
     { "caption": "LSP-metals: Show semanticdb detailed", "command": "file_decoder", "args":{"decoding_type": "semanticdb-detailed"}},
     { "caption": "LSP-metals: Show semanticdb proto", "command": "file_decoder", "args":{"decoding_type": "semanticdb-proto"}},
+    { "caption": "LSP-metals: Find in dependency", "command": "find_in_dependency", "args":{}},
     { "caption": "LSP-metals: New Scala File", "command": "new_scala_file", "args":{"paths": []}},
     { "caption": "LSP-metals: Analyze Stacktrace", "command": "analyze_stacktrace"},
     {
