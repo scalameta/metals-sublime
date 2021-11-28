@@ -18,6 +18,7 @@ import mdpopups
 from functools import reduce
 from . LspMetalsFocus import LspMetalsFocusViewCommand, ActiveViewListener
 from . FileDecoder import FileDecoderCommand
+from . AnalyzeStacktrace import AnalyzeStacktraceCommand
 
 # TODO: Bring to public API
 from LSP.plugin.core.views import location_to_encoded_filename
