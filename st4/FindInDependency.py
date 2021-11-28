@@ -48,8 +48,9 @@ class FindInDependencyCommand(LspTextCommand):
         if response:
             locations = response
             session = self.weaksession()
-            self.view.run_command("add_jump_record", {"selection": [(r.a, r.b) for r in self.view.sel()]})
-            LocationPicker(self.view, session, locations, side_by_side=False)
+            if session:
+                self.view.run_command("add_jump_record", {"selection": [(r.a, r.b) for r in self.view.sel()]})
+                LocationPicker(self.view, session, locations, side_by_side=False)
         else:
             sublime.message_dialog("No matches found")
 
