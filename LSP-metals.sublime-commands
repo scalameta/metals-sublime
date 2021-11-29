@@ -14,6 +14,7 @@
     { "caption": "LSP-metals: Show semanticdb detailed", "command": "file_decoder", "args":{"decoding_type": "semanticdb-detailed"}},
     { "caption": "LSP-metals: Show semanticdb proto", "command": "file_decoder", "args":{"decoding_type": "semanticdb-proto"}},
     { "caption": "LSP-metals: New Scala File", "command": "new_scala_file", "args":{"paths": []}},
+    { "caption": "LSP-metals: Analyze Stacktrace", "command": "analyze_stacktrace"},
     {
         "caption": "LSP-metals: Settings",
         "command": "edit_settings",
