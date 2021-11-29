@@ -18,6 +18,7 @@ import mdpopups
 from functools import reduce
 from . LspMetalsFocus import LspMetalsFocusViewCommand, ActiveViewListener
 from . FileDecoder import FileDecoderCommand
+from . FindInDependency import FindInDependencyCommand
 from . AnalyzeStacktrace import AnalyzeStacktraceCommand
 from . OpenFileEncoded import OpenFileEncodedCommand
 from urllib.parse import urlparse,unquote
