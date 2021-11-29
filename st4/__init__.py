@@ -19,6 +19,10 @@ from functools import reduce
 from . LspMetalsFocus import LspMetalsFocusViewCommand, ActiveViewListener
 from . FileDecoder import FileDecoderCommand
 from . AnalyzeStacktrace import AnalyzeStacktraceCommand
+from . OpenFileEncoded import OpenFileEncodedCommand
+from urllib.parse import urlparse,unquote
+import re
+import json
 
 # TODO: Bring to public API
 from LSP.plugin.core.views import location_to_encoded_filename
@@ -117,6 +121,16 @@ class Metals(AbstractPlugin):
                         location_to_encoded_filename(args[0]),
                         flags=sublime.ENCODED_POSITION
                     )
+        if params.get('command') == 'metals-show-stacktrace':
+            args = params.get('arguments')
+            def _replace_link(match) -> str:
+                url = urlparse(match.group(1))
+                command_args = json.loads(unquote(url.query))
+                path = urlparse(command_args[0]).path
+                location = command_args[1] + 1
+                return "href='subl:open_file_encoded {{\"file\": \"{}:{}\"}}'".format(path, location)
+            new_content = re.sub('href=\'(.*?)\'', _replace_link, args[0])
+            sublime.active_window().new_html_sheet('Stacktrace', new_content)
 
     def m_metals_inputBox(self, params: Any, request_id: Any) -> None:
         """Handle the metals/inputBox request."""

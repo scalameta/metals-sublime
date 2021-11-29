@@ -26,7 +26,8 @@
     // (ST4 only) When enabled, shows worksheet evaluations as Sublime.Phantom instead of code comments.
     "decorationProvider": true,
     // (ST4 only) When enabled, inferred types and implicits are shown as as Sublime.Phantom.
-    "inlineDecorationProvider": true
+    "inlineDecorationProvider": true,
+    "isCommandInHtmlSupported": true
   },
 
   "settings": {

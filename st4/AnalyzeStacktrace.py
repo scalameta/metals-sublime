@@ -5,8 +5,11 @@ from LSP.plugin.core.typing import Any
 import sublime
 import sublime_plugin
 
+from urllib.parse import urlparse,unquote
+import re
+import json
+
 class AnalyzeStacktraceCommand(LspTextCommand):
-    _command = "metals/findTextInDependencyJars"
     session_name = "metals"
 
     def run(self, edit: sublime.Edit) -> None:
