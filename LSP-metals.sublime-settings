@@ -21,7 +21,7 @@
   "initializationOptions": {
     "didFocusProvider": true,
     "executeClientCommandProvider": true,
-    "statusBarProvider": true,
+    "statusBarProvider": "on",
     "inputBoxProvider": true,
     // (ST4 only) When enabled, shows worksheet evaluations as Sublime.Phantom instead of code comments.
     "decorationProvider": true,
