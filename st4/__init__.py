@@ -77,7 +77,8 @@ class Metals(AbstractPlugin):
         if not session:
             return
         key = "metals-status"
-        if params.get("hide", False):
+        hide = params.get("hide") if isinstance(params.get("hide"), bool) else False
+        if not hide:
             session.set_window_status_async(key, params.get('text', ''))
         else:
             session.erase_window_status_async(key)
