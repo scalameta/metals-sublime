@@ -1,14 +1,12 @@
-from LSP.plugin.core.registry import LspTextCommand
-from LSP.plugin.core.types import Optional, Dict, Any
+from . lsp_metals_text_command import LspMetalsTextCommand
 from LSP.plugin.core.protocol import Notification
+from LSP.plugin.core.types import Optional, Dict, Any
 
 import sublime
 import sublime_plugin
 import functools
 
-class LspMetalsFocusViewCommand(LspTextCommand):
-
-    session_name = "metals"
+class LspMetalsFocusViewCommand(LspMetalsTextCommand):
 
     def run(self, edit: sublime.Edit, view_id: int, event: Optional[Dict[str, Any]] = None) -> None:
         view = sublime.View(view_id)

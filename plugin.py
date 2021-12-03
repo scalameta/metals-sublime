@@ -1,24 +1,32 @@
+from LSP.plugin import register_plugin
+from LSP.plugin import unregister_plugin
+
 import os
 import sublime
 
-if os.path.basename(os.path.dirname(__file__)) != "LSP-metals":
-    name = os.path.basename(os.path.dirname(__file__))
+package_name = __package__
+if package_name != "LSP-metals":
     fmt = (
         'The directory of the LSP-metals package is named "{}".',
         'Please rename it to "LSP-metals" for correct functioning of',
         'this package.'
     )
-    sublime.error_message(" ".join(fmt).format(name))
+    sublime.error_message(" ".join(fmt).format(package_name))
+elif sublime.version() < '4000':
+    sublime.error_message('This version requires st4, use the st3 branch')
 else:
-    try:
-        from LSP.plugin import __version__ as v
-        if v < (1, 1, 0):
-            from .st3 import *
-        elif (1, 1, 0) <= v < (2, 0, 0):
-            from .st4 import *
-        else:
-            fmt = "LSP-metals: unsupported LSP version: {}"
-            sublime.error_message(fmt.format(v))
-    except ImportError:
-        # Ancient LSP
-        from .st3 import *
+    from . commands.lsp_metals_analyze_stacktrace import LspMetalsAnalyzeStacktraceCommand
+    from . commands.lsp_metals_file_decoder import LspMetalsFileDecoderCommand
+    from . commands.lsp_metals_find_in_dependency import LspMetalsFindInDependencyCommand
+    from . commands.lsp_metals_focus import LspMetalsFocusViewCommand, ActiveViewListener
+    from . commands.lsp_metals_new_scala_file import LspMetalsNewScalaFileCommand
+    from . commands.lsp_metals_open_file_encoded import LspMetalsOpenFileEncodedCommand
+    from . commands.lsp_metals_text_command import LspMetalsTextCommand
+    from . commands.lsp_metals_execute_command import LspMetalsExecuteCommand
+    from . core.metals import Metals
+
+    def plugin_loaded() -> None:
+        register_plugin(Metals)
+
+    def plugin_unloaded() -> None:
+        unregister_plugin(Metals)

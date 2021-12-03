@@ -1,5 +1,6 @@
+from . lsp_metals_text_command import LspMetalsTextCommand
+from . utils import handle_error
 from LSP.plugin.core.protocol import Request, Location
-from LSP.plugin.core.registry import LspTextCommand
 from LSP.plugin.core.sessions import Session
 from LSP.plugin.core.typing import Any, List, Union, Dict
 from LSP.plugin.locationpicker import LocationPicker
@@ -25,11 +26,10 @@ class PatternInput(sublime_plugin.TextInputHandler):
     def next_input(handler, value):
         return IncludeInput()
 
-class FindInDependencyCommand(LspTextCommand):
+class LspMetalsFindInDependencyCommand(LspMetalsTextCommand):
     _command = "metals/findTextInDependencyJars"
-    session_name = "metals"
 
-    def input(self, _args: Any) -> sublime_plugin.TextInputHandler:
+    def input(self, _args: Any):
         return PatternInput()
 
     def run(self, edit: sublime.Edit, pattern_input: str, include_input: str) -> None:
@@ -42,7 +42,8 @@ class FindInDependencyCommand(LspTextCommand):
                   }
                 request = Request(self._command, params, None, progress=True)
                 self.weaksession = weakref.ref(session)
-                session.send_request(request, self._handle_response, self._handle_error)
+                session.send_request(request, self._handle_response,
+                    lambda r: handle_error(self._command, r))
 
     def _handle_response(self, response: Union[List[Location], None]) -> None:
         if response:
@@ -53,8 +54,3 @@ class FindInDependencyCommand(LspTextCommand):
                 LocationPicker(self.view, session, locations, side_by_side=False)
         else:
             sublime.message_dialog("No matches found")
-
-    def _handle_error(self, error: Dict[str, Any]) -> None:
-        reason = error.get("message", "none provided by server :(")
-        msg = "command '{}' failed. Reason: {}".format(self._command, reason)
-        sublime.error_message(msg)

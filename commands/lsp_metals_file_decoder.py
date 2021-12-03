@@ -1,14 +1,15 @@
+from . lsp_metals_text_command import LspMetalsTextCommand
+from . utils import handle_error
 from LSP.plugin.core.protocol import Error
-from LSP.plugin.core.registry import LspTextCommand
 from LSP.plugin.core.typing import Any
 from LSP.plugin.core.url import filename_to_uri  # TODO: deprecated in a future version
 
 import os
 import sublime
 
-class FileDecoderCommand(LspTextCommand):
-    session_name = "metals"
+class LspMetalsFileDecoderCommand(LspMetalsTextCommand):
 
+    _command = 'file-decode'
     _jvm_extentions = {'java', 'scala', 'class'}
     _tasty_extentions = {'scala', 'tasty'}
     _sematicdb_extentions = {'scala', 'java', 'semanticdb'}
@@ -26,7 +27,7 @@ class FileDecoderCommand(LspTextCommand):
         if super().is_enabled(None, None):
             extension = os.path.splitext(self.view.file_name())[1][1:]
             accepted_extentions = self._decoders.get(decoding_type)
-            return extension in accepted_extentions
+            return accepted_extentions is not None and extension in accepted_extentions
         else:
             return False
 
@@ -35,15 +36,13 @@ class FileDecoderCommand(LspTextCommand):
         session = self.session_by_name(self.session_name)
         if session:
             params = {
-                "command": 'file-decode',
+                "command": self._command,
                 "arguments": [uri]
             }
 
             def handle_response(response: Any) -> None:
                 if isinstance(response, Error) or 'error' in response:
-                    error = response['error'] if 'error' in response else response
-                    sublime.message_dialog("command 'file-decode' failed. Reason: {}".format(str(error)))
-                    return
+                    handle_error(self._command, response)
                 elif response and 'value' in response:
                     window = self.view.window()
                     view = window.new_file()
