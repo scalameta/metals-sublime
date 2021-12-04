@@ -23,4 +23,4 @@ class LspMetalsAnalyzeStacktraceCommand(LspMetalsTextCommand):
 
     def _handle_response(self, response: Any) -> None:
         if isinstance(response, Error):
-            handle_error(self._command, response)
+            handle_error(self._command_name, response)

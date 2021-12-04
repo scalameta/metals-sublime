@@ -10,7 +10,7 @@ import sublime
 
 def handle_publish_decorations(session: Session, decorations_params: Any) -> None:
     phantom_key = "metals_decoraction"
-
+    field_name = "_lsp_metals_decorations"
     if not isinstance(decorations_params, dict):
         return
 
@@ -24,10 +24,10 @@ def handle_publish_decorations(session: Session, decorations_params: Any) -> Non
 
     for sv in session_buffer.session_views:
         try:
-            phantom_set = getattr(sv, "_lsp_metals_decorations")
+            phantom_set = getattr(session_buffer, field_name)
         except AttributeError:
             phantom_set = sublime.PhantomSet(sv.view, phantom_key)
-            setattr(sv, "_lsp_metals_decorations", phantom_set)
+            setattr(session_buffer, field_name, phantom_set)
 
         phantom_set.update(decorations_to_phantom(decorations_params.get('options', []), sv.view))
 
