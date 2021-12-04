@@ -21,15 +21,15 @@ def handle_publish_decorations(session: Session, decorations_params: Any) -> Non
     session_buffer = session.get_session_buffer_for_uri_async(uri)
     if not session_buffer:
         return
+    session_view = next(iter(session_buffer.session_views), None)
+    if session_view:
+        try:
+            phantom_set = getattr(session_buffer, field_name)
+        except AttributeError:
+            phantom_set = sublime.PhantomSet(session_view.view, phantom_key)
+            setattr(session_buffer, field_name, phantom_set)
 
-    view = list(session_buffer.session_views)[0].view
-    try:
-        phantom_set = getattr(session_buffer, field_name)
-    except AttributeError:
-        phantom_set = sublime.PhantomSet(view, phantom_key)
-        setattr(session_buffer, field_name, phantom_set)
-
-    phantom_set.update(decorations_to_phantom(decorations_params.get('options', []), view))
+        phantom_set.update(decorations_to_phantom(decorations_params.get('options', []), session_view.view))
 
 PHANTOM_HTML = """
 <style>div.phantom {{font-style: italic; color: {}}}</style>
