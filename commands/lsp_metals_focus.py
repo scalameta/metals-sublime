@@ -8,11 +8,8 @@ import functools
 
 class LspMetalsFocusViewCommand(LspMetalsTextCommand):
 
-    def run(self, edit: sublime.Edit, view_id: int, event: Optional[Dict[str, Any]] = None) -> None:
-        view = sublime.View(view_id)
-        if not view.is_valid():
-            return
-        fname = view.file_name()
+    def run(self, edit: sublime.Edit) -> None:
+        fname = self.view.file_name()
         if not fname:
             return
         sublime.set_timeout_async(functools.partial(self.run_async, fname))
@@ -26,6 +23,6 @@ class LspMetalsFocusViewCommand(LspMetalsTextCommand):
 
 
 class ActiveViewListener(sublime_plugin.EventListener):
-    def on_activated(self, view: sublime.View) -> None:
+    def on_activated_async(self, view: sublime.View) -> None:
         if view.file_name():
-            view.run_command("lsp_metals_focus_view", {"view_id": view.id()})
+            view.run_command("lsp_metals_focus_view")
