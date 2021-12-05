@@ -20,16 +20,6 @@ class Metals(AbstractPlugin):
         return LspMetalsTextCommand.session_name
 
     @classmethod
-    def configuration(cls) -> Tuple[sublime.Settings, str]:
-        settings, path = super().configuration()
-        java_path = get_java_path(settings)
-        version = settings.get("server_version")
-        properties = prepare_server_properties(settings.get("server_properties"))
-        command = create_launch_command(java_path, version, properties)
-        settings.set("command", command)
-        return settings, path
-
-    @classmethod
     def can_start(
         cls,
         window: sublime.Window,
@@ -48,6 +38,10 @@ class Metals(AbstractPlugin):
         if not server_version :
             return "'server_version' setting should be set"
 
+        properties = prepare_server_properties(plugin_settings.get("server_properties"))
+        command = create_launch_command(java_path, server_version, properties)
+        configuration.command = command
+        return None
 
     # notification and request handlers
 
