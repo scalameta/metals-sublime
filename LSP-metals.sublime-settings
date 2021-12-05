@@ -5,12 +5,12 @@
   // Optional path to the Java home directory. Requires reloading sublime.
   "java_home": "",
 
-  // Attach to views with base scope source.scala (ST4 only)
+  // Attach to views with base scope source.scala
   "selector": "source.scala",
 
   // Optional array of properties to pass along to the Metals server.
   // Example: `-Dhttps.proxyHost=… -Dhttps.proxyPort=…` or `-Dmetals.statistics=all`
-  // check https://scalameta.org/metals/docs/integrations/new-editor.html#metals-server-properties for all properties
+  // check https://scalameta.org/metals/docs/integrations/new-editor/#metals-server-properties for all properties
   "server_properties": [
     "-Dmetals.client=sublime",
     "-Xss4m",
@@ -23,20 +23,20 @@
     "executeClientCommandProvider": true,
     "statusBarProvider": "on",
     "inputBoxProvider": true,
-    // (ST4 only) When enabled, shows worksheet evaluations as Sublime.Phantom instead of code comments.
+    // When enabled, shows worksheet evaluations as Sublime.Phantom instead of code comments.
     "decorationProvider": true,
-    // (ST4 only) When enabled, inferred types and implicits are shown as as Sublime.Phantom.
+    // When enabled, inferred types and implicits are shown as as Sublime.Phantom.
     "inlineDecorationProvider": true,
     "isCommandInHtmlSupported": true
   },
 
   "settings": {
     "metals": {
-      // (ST4 only) When enabled, each method and variable that can have inferred types has them displayed.
+      // When enabled, each method and variable that can have inferred types has them displayed.
       "show-inferred-type": false,
-      // (ST4 only) When enabled, each method that has implicit arguments has them displayed.
+      // When enabled, each method that has implicit arguments has them displayed.
       "show-implicit-arguments": false,
-      // (ST4 only) When enabled, each place where an implicit method or class is used has it displayed.
+      // When enabled, each place where an implicit method or class is used has it displayed.
       "show-implicit-conversions-and-classes": false
     }
   }

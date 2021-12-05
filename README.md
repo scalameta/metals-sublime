@@ -31,7 +31,7 @@
 
 ### Requirements
 
-- Sublime text 3 or above
+- Sublime Text (build 4000 or later)
 - [LSP](https://github.com/tomv564/LSP) package: `Command Palette (Cmd + Shift + P) > Install package > LSP`
 - Java 8 or 11 provided by OpenJDK or Oracle. Eclipse OpenJ9 is not supported,
     please make sure the JAVA_HOME environment variable points to a valid Java 8 or
