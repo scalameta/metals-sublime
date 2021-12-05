@@ -7,7 +7,7 @@
     { "caption": "LSP-metals: Compile Cancel", "command": "lsp_metals_execute", "args":{"command_name": "compile-cancel"}},
     { "caption": "LSP-metals: Doctor Run", "command": "lsp_metals_execute", "args":{"command_name": "doctor-run"}},
     { "caption": "LSP-metals: Reset Choice", "command": "lsp_metals_execute", "args":{"command_name": "reset-choice"}},
-    { "caption": "LSP-metals: Show Decoded TASTy", "command": "lsp_file_decoder", "args":{"decoding_type": "tasty-decoded"}},
+    { "caption": "LSP-metals: Show Decoded TASTy", "command": "lsp_metals_file_decoder", "args":{"decoding_type": "tasty-decoded"}},
     { "caption": "LSP-metals: Show decompiled with javap", "command": "lsp_metals_file_decoder", "args":{"decoding_type": "javap"}},
     { "caption": "LSP-metals: Show decompiled with javap verbose", "command": "lsp_metals_file_decoder", "args":{"decoding_type": "javap-verbose"}},
     { "caption": "LSP-metals: Show semanticdb", "command": "lsp_metals_file_decoder", "args":{"decoding_type": "semanticdb-compact"}},
