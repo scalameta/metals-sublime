@@ -1,3 +1,4 @@
+from . status import status_key
 from LSP.plugin.core.sessions import Session
 from LSP.plugin.core.types import Any
 from LSP.plugin.core.views import location_to_encoded_filename
@@ -19,6 +20,9 @@ def handle_execute_client(session: Session, params: Any) -> None:
         goto_location(session, args)
     if command_name == 'metals-show-stacktrace':
         show_stacktrace(session, args)
+    else:
+        msg = "Unknown command {}".format(command_name)
+        session.set_window_status_async(status_key, msg)
 
 def goto_location(session: Session, args: Any) -> None:
     """https://scalameta.org/metals/docs/integrations/new-editor/#goto-location"""
