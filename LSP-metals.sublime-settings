@@ -34,11 +34,11 @@
     "metals": {
       "superMethodLensesEnabled": true,
       // When enabled, each method and variable that can have inferred types has them displayed.
-      "show-inferred-type": false,
+      "showInferredType": false,
       // When enabled, each method that has implicit arguments has them displayed.
-      "show-implicit-arguments": false,
+      "showImplicitArguments": false,
       // When enabled, each place where an implicit method or class is used has it displayed.
-      "show-implicit-conversions-and-classes": false
+      "showImplicitConversionsAndClasses": false
     }
   }
 }
