@@ -1,4 +1,6 @@
 [
+    { "caption": "LSP-metals: Goto Super Method", "command": "lsp_metals_send_position", "args":{"command_name": "goto-super-method"}},
+    { "caption": "LSP-metals: Super Method Hierarchy", "command": "lsp_metals_send_position", "args":{"command_name": "super-method-hierarchy"}},
     { "caption": "LSP-metals: Build Connect", "command": "lsp_metals_execute", "args":{"command_name": "build-connect"}},
     { "caption": "LSP-metals: Build Restart", "command": "lsp_metals_execute", "args":{"command_name": "build-restart"}},
     { "caption": "LSP-metals: BSP Switch", "command": "lsp_metals_execute", "args":{"command_name": "bsp-switch"}},
