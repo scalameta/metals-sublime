@@ -6,6 +6,8 @@ from urllib.parse import urlparse, unquote
 import re
 import json
 import sublime
+import mdpopups
+from tabulate import tabulate
 
 
 def handle_execute_client(session: Session, params: Any) -> None:
@@ -18,8 +20,10 @@ def handle_execute_client(session: Session, params: Any) -> None:
 
     if command_name == "metals-goto-location":
         goto_location(session, args)
-    if command_name == 'metals-show-stacktrace':
+    elif command_name == 'metals-show-stacktrace':
         show_stacktrace(session, args)
+    elif command_name in {'metals-doctor-run', 'metals-doctor-reload'}:
+        run_doctor(session, args)
     else:
         msg = "Unknown command {}".format(command_name)
         session.set_window_status_async(status_key, msg)
@@ -46,3 +50,43 @@ def show_stacktrace(session: Session, args: Any) -> None:
     if isinstance(args, list) and args:
         new_content = re.sub('href=\'(.*?)\'', _replace_link, args[0])
         session.window.new_html_sheet('Stacktrace', new_content)
+
+def run_doctor(session: Session, args: Any) -> None:
+    if isinstance(args, list) and args:
+        content = json.loads(args[0])
+        messages = content.get('messages')
+        targets = content.get('targets')
+        markdown = ""
+        markdown += "## {}  \n\n".format(content.get('headerText'))
+
+        if messages:
+            for message in messages:
+                markdown += "### {} \n".format(message.get('title'))
+                for recommendation in message.get('recommendations'):
+                    markdown += '* {}\n'.format(recommendation)
+                markdown += '\n\n'
+        else:
+            headers = [
+                'Build Target',
+                'Scala Version',
+                'Diagnostics',
+                'Goto Definition',
+                'Completions',
+                'Find References',
+                'Recommendation'
+            ]
+            markdown += "## Build Targets\n"
+            lines = []
+            for target in targets:
+                lines.append([
+                    target.get('buildTarget'),
+                    target.get('scalaVersion'),
+                    target.get('diagnostics'),
+                    target.get('gotoDefinition'),
+                    target.get('completions'),
+                    target.get('findReferences'),
+                    target.get('recommendation')
+                ])
+            table = tabulate(lines, headers, "pretty")
+            markdown += "```\n{}\n```\n\n".format(table)
+        mdpopups.new_html_sheet(session.window, "Metals Doctor", markdown, True)
