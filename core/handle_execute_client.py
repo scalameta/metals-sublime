@@ -18,6 +18,8 @@ def handle_execute_client(session: Session, params: Any) -> None:
 
     if command_name == "metals-goto-location":
         goto_location(session, args)
+    elif command_name == 'metals-diagnostics-focus':
+        sublime.run_command('lsp_goto_diagnostic')
     if command_name == 'metals-show-stacktrace':
         show_stacktrace(session, args)
     else:
