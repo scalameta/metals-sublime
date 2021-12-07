@@ -1,6 +1,7 @@
 from . decorations import handle_publish_decorations
 from . handle_execute_client import handle_execute_client
 from . handle_input_box import handle_input_box
+from . handle_quickpick import handle_quickpick
 from . status import handle_status
 from .. commands.lsp_metals_text_command import LspMetalsTextCommand
 from LSP.plugin import AbstractPlugin
@@ -69,6 +70,12 @@ class Metals(AbstractPlugin):
         if not session:
             return
         handle_input_box(session, params, request_id)
+
+    def m_metals_quickPick(self, params: Any, request_id: Any) -> None:
+        session = self.weaksession()
+        if not session:
+            return
+        handle_quickpick(session, params, request_id)
 
 def get_java_path(settings: sublime.Settings) -> str:
     java_home = settings.get("java_home")
