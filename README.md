@@ -163,9 +163,9 @@ To enable this feature enable the following `LSP-metals` settings:
 "settings": {
   "metals": {
     ...
-    "show-inferred-type": true,
-    "show-implicit-arguments": true,
-    "show-implicit-conversions-and-classes": true
+    "showInferredType": true,
+    "showImplicitArguments": true,
+    "showImplicitConversionsAndClasses": true
   }
 }
 
