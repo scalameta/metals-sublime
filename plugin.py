@@ -20,9 +20,10 @@ else:
     from . commands.lsp_metals_file_decoder import LspMetalsFileDecoderCommand
     from . commands.lsp_metals_find_in_dependency import LspMetalsFindInDependencyCommand
     from . commands.lsp_metals_focus import LspMetalsFocusViewCommand, ActiveViewListener
+    from . commands.lsp_metals_goto import LspMetalsGoto
+    from . commands.lsp_metals_goto_position import LspMetalsGotoPositionCommand
     from . commands.lsp_metals_goto_super_method import LspMetalsSendPositionCommand
     from . commands.lsp_metals_new_scala_file import LspMetalsNewScalaFileCommand
-    from . commands.lsp_metals_open_file_encoded import LspMetalsOpenFileEncodedCommand
     from . commands.lsp_metals_text_command import LspMetalsTextCommand
     from . core.metals import Metals
 
