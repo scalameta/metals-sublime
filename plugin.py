@@ -24,6 +24,7 @@ else:
     from . commands.lsp_metals_new_scala_file import LspMetalsNewScalaFileCommand
     from . commands.lsp_metals_open_file_encoded import LspMetalsOpenFileEncodedCommand
     from . commands.lsp_metals_text_command import LspMetalsTextCommand
+    from . core.decorations import WorksheetListener, LspMetalsClearPhantomsCommand
     from . core.metals import Metals
 
     def plugin_loaded() -> None:
