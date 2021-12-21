@@ -27,7 +27,7 @@
     "decorationProvider": true,
     // When enabled, inferred types and implicits are shown as as Sublime.Phantom.
     "inlineDecorationProvider": true,
-    "isCommandInHtmlSupported": true,
+    "commandInHtmlFormat": "sublime",
     "doctorProvider": "json",
     "isHttpEnabled": false
   },
