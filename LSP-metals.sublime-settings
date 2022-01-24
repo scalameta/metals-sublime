@@ -6,7 +6,7 @@
   "java_home": "",
 
   // Attach to views with base scope source.scala
-  "selector": "source.scala",
+  "selector": "source.scala, source.java",
 
   // Optional array of properties to pass along to the Metals server.
   // Example: `-Dhttps.proxyHost=… -Dhttps.proxyPort=…` or `-Dmetals.statistics=all`
