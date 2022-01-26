@@ -22,7 +22,7 @@ def get_session(window: sublime.Window) -> Optional[Session]:
 
     return metals_session
 
-def open_location(window: sublime.Window, location: Location) -> None:
+def open_location(window: sublime.Window, location: Dict) -> None:
     uri = location['uri']
     r = location['range']
     (_, path) = parse_uri(uri)
