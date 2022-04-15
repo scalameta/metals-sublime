@@ -29,7 +29,8 @@
     "inlineDecorationProvider": true,
     "commandInHtmlFormat": "sublime",
     "doctorProvider": "json",
-    "isHttpEnabled": false
+    "isHttpEnabled": false,
+    "doctorVisibilityProvider": false
   },
 
   "settings": {
