@@ -20,7 +20,7 @@ def handle_execute_client(session: Session, params: Any) -> None:
         goto_location(session, args)
     elif command_name == 'metals-show-stacktrace':
         show_stacktrace(session, args)
-    elif command_name in {'metals-doctor-run', 'metals-doctor-reload'}:
+    elif command_name in {'metals-doctor-run'}:
         run_doctor(session, args)
     else:
         msg = "Unknown command {}".format(command_name)
