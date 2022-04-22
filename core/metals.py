@@ -7,6 +7,7 @@ from LSP.plugin import AbstractPlugin
 from LSP.plugin import ClientConfig
 from LSP.plugin import WorkspaceFolder
 from LSP.plugin.core.types import Optional, Any, Tuple, List
+from distutils.version import LooseVersion
 
 import sublime
 import os
@@ -79,8 +80,11 @@ def get_java_path(settings: sublime.Settings) -> str:
         return os.path.join(java_home, "bin", "java")
     return "java"
 
-
 def create_launch_command(java_path: str, artifact_version: str, server_properties: List[str]) -> List[str]:
+    binary_version = "2.12"
+    if LooseVersion(artifact_version) > LooseVersion("0.11.2"):
+        binary_version = "2.13"
+
     return [java_path] + server_properties + [
         "-jar",
         _COURSIER_PATH,
@@ -93,7 +97,7 @@ def create_launch_command(java_path: str, artifact_version: str, server_properti
         "sonatype:snapshots",
         "--main-class",
         "scala.meta.metals.Main",
-        "org.scalameta:metals_2.12:{}".format(artifact_version)
+        "org.scalameta:metals_{}:{}".format(binary_version, artifact_version)
     ]
 
 
