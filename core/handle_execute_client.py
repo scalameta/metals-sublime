@@ -42,19 +42,31 @@ def run_doctor(session: Session, args: Any) -> None:
 
         content = json.loads(args[0])
 
-        header = content.get("header")
+        doctor_version = 0 if content.get('version') is None else int(content.get('version'))
+
+        header = content.get('header')
         messages = content.get('messages')
         targets = content.get('targets')
         explanations = content.get('explanations')
 
-        markdown = ""
-        markdown += "# {} \n\n".format(content.get('title'))
+        markdown = "# {} \n\n".format(content.get('title'))
 
-        if header:
-            markdown += "{} \n\n".format(header.get('buildServer'))
-            markdown += "{} \n\n".format(header.get('jdkInfo'))
-            markdown += "{} \n\n".format(header.get('serverInfo'))
+        if doctor_version >= 3:
+            fields = [
+              'buildTool',
+              'buildServer',
+              'importBuildStatus',
+              'jdkInfo',
+              'serverInfo'
+            ]
+
+            for field in fields:
+              if header.get(field):
+                markdown += "{} \n\n".format(header.get(field))
+
             markdown += "{} \n\n".format(header.get('buildTargetDescription'))
+        else:
+            markdown += "{} \n\n".format(content.get('headerText'))
 
         if messages:
             for message in messages:
@@ -62,43 +74,55 @@ def run_doctor(session: Session, args: Any) -> None:
                 for recommendation in message.get('recommendations'):
                     markdown += '* {}\n'.format(recommendation)
                 markdown += '\n\n'
-
-        if targets:
+        elif targets:
             markdown += "## Build Targets\n"
+
+            default_target_labels = {
+                'targetType': 'Target Type',
+                'compilationStatus': 'Compilation status',
+                'diagnostics': 'Diagnostics',
+                'interactive': 'Interactive',
+                'semanticdb': 'SemanticDB',
+                'debugging': 'Debugging',
+                'java': 'Java Support',
+                'recommendation': 'Recommendation'
+            }
+
+            legacy_target_labels = {
+                'scalaVersion' :'Scala Version',
+                'diagnostics' :'Diagnostics',
+                'gotoDefinition' :'Goto Definition',
+                'completions' :'Completions',
+                'findReferences' :'Find References',
+            }
+
+            target_labels = default_target_labels if doctor_version > 0 else legacy_target_labels
+
             lines = []
             for target in targets:
-                line = [
-                    '#### {}'.format(target.get('buildTarget')),
-                    '```',
-                    '* {0:<20}: {1}'.format("Target Type", target.get('targetType')),
-                    '* {0:<20}: {1}'.format("Compilation status",target.get('compilationStatus')),
-                    '* {0:<20}: {1}'.format("Diagnostics", target.get('diagnostics')),
-                    '* {0:<20}: {1}'.format("Interactive", target.get('interactive')),
-                    '* {0:<20}: {1}'.format("SemanticDB", target.get('semanticdb')),
-                    '* {0:<20}: {1}'.format("Debugging", target.get('debugging')),
-                    '* {0:<20}: {1}'.format("Java Support", target.get('java'))
-                ]
+                lines.append('#### {}'.format(target.get('buildTarget')))
+                lines.append('```')
 
-                if target.get('recommendation'):
-                    line.append('* {0:<20}: {1}'.format("Recommendation", target.get('recommendation')))
+                for field, label in target_labels.items():
+                    if target.get(field):
+                        lines.append('* {0:<20}: {1}'.format(label, target.get(field)))
 
-                line.append("```")
-
-                lines.append('\n'.join(line))
+                lines.append("```")
 
             markdown += "{}\n\n".format('\n'.join(lines))
 
-        if explanations:
-            markdown += "## Explanations\n"
-            for explanation in explanations:
-                markdown += '{}\n\n'.format(explanation.get('title'))
-                for explanation in explanation.get('explanations'):
-                    markdown += '* {}\n'.format(explanation)
-                markdown += '\n\n'
+            if explanations:
+                markdown += "## Explanations\n"
+                for explanation in explanations:
+                    markdown += '{}\n\n'.format(explanation.get('title'))
+                    for deep_explanation in explanation.get('explanations'):
+                        markdown += '* {}\n'.format(deep_explanation)
+                    markdown += '\n\n'
 
         custom_css = """
         .metals-doctor { padding: 1.5rem }
         .metals-doctor h1, .metals-doctor h2 { text-decoration: underline }
         .metals-doctor h2, .metals-doctor h3, .metals-doctor h4, .metals-doctor p, .metals-doctor ul { margin-top: 1rem }
         """
+
         mdpopups.new_html_sheet(session.window, "Metals Doctor", markdown, True, css=custom_css, wrapper_class="metals-doctor")
