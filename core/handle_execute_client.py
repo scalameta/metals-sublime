@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from . status import status_key
 from .. commands.utils import open_location
 from LSP.plugin.core.sessions import Session
@@ -77,24 +78,24 @@ def run_doctor(session: Session, args: Any) -> None:
         elif targets:
             markdown += "## Build Targets\n"
 
-            default_target_labels = {
-                'targetType': 'Target Type',
-                'compilationStatus': 'Compilation status',
-                'diagnostics': 'Diagnostics',
-                'interactive': 'Interactive',
-                'semanticdb': 'SemanticDB',
-                'debugging': 'Debugging',
-                'java': 'Java Support',
-                'recommendation': 'Recommendation'
-            }
+            default_target_labels = OrderedDict([
+                ('targetType', 'Target Type'),
+                ('compilationStatus', 'Compilation status'),
+                ('diagnostics', 'Diagnostics'),
+                ('interactive', 'Interactive'),
+                ('semanticdb', 'SemanticDB'),
+                ('debugging', 'Debugging'),
+                ('java', 'Java Support'),
+                ('recommendation', 'Recommendation')
+            ])
 
-            legacy_target_labels = {
-                'scalaVersion' :'Scala Version',
-                'diagnostics' :'Diagnostics',
-                'gotoDefinition' :'Goto Definition',
-                'completions' :'Completions',
-                'findReferences' :'Find References',
-            }
+            legacy_target_labels = OrderedDict([
+                ('scalaVersion', 'Scala Version'),
+                ('diagnostics', 'Diagnostics'),
+                ('gotoDefinition', 'Goto Definition'),
+                ('completions', 'Completions'),
+                ('findReferences', 'Find References')
+            ])
 
             target_labels = default_target_labels if doctor_version > 0 else legacy_target_labels
 
