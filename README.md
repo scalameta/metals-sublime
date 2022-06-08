@@ -4,9 +4,11 @@
 
 `LSP-metals` is the recommended [Sublime LSP](https://packagecontrol.io/packages/LSP) extension for [Metals](https://scalameta.org/metals/), the Scala language server. `LSP-metals` offers automated Metals installation, easy configuration, Metals-specific commands and many other small features.
 
-<a href="https://gitter.im/scalameta/metals">
-<img alt="Join the chat on Gitter" src="https://img.shields.io/gitter/room/scalameta/metals.svg?logo=gitter&style=flat-square&color=F71263" />
-</a>
+<p>
+    <a href="https://discord.gg/qSWW6khxjD">
+        <img alt="Discord" src="https://img.shields.io/discord/632642981228314653">
+    </a>
+</p>
 
 ## Table of Contents
   - [Requirements](#requirements)
