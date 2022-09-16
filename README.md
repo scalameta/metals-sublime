@@ -99,8 +99,10 @@ instructions in the displayed error message.
 
 #### Server version
 
-To use the latest Metals SNAPSHOT update the `server_version` setting to try out the latest pending Metals features.
-After updating the version, you need to restart sublime.
+In order to install the latest snapshot of metals you can explicitly set the snapshot version for `server_version`. Alternatively, you can also just default to the latest snapshot by setting `server_version` to `latest-snapshot`.
+The same can be done for the latest stable release by setting the value to `latest-stable`, If no version is set, it defaults to the latest stable release as well.
+
+The new release check in done each time sublime text is started.
 
 ### Workplace Diagnostic
 

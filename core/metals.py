@@ -3,16 +3,20 @@ from . handle_execute_client import handle_execute_client
 from . handle_input_box import handle_input_box
 from . status import handle_status
 from .. commands.lsp_metals_text_command import LspMetalsTextCommand
+from distutils.version import LooseVersion
 from LSP.plugin import AbstractPlugin
 from LSP.plugin import ClientConfig
 from LSP.plugin import WorkspaceFolder
 from LSP.plugin.core.types import Optional, Any, Tuple, List
-from distutils.version import LooseVersion
+from urllib.request import urlopen, Request
+import json
 
 import sublime
 import os
 
 _COURSIER_PATH = os.path.join(os.path.dirname(__file__), '..', 'coursier')
+_LATEST_STABLE = "latest-stable"
+_LATEST_SNAPSHOT = "latest-snapshot"
 
 class Metals(AbstractPlugin):
 
@@ -35,9 +39,22 @@ class Metals(AbstractPlugin):
         java_path = get_java_path(plugin_settings)
         if not java_path :
             return "Please install java or set the 'java_home' setting"
-        server_version = plugin_settings.get('server_version')
-        if not server_version :
-            return "'server_version' setting should be set"
+        server_version = plugin_settings.get('server_version', _LATEST_STABLE)
+        if not server_version or server_version == _LATEST_STABLE or server_version == _LATEST_SNAPSHOT:
+            try:
+                httprequest = Request(
+                    "https://scalameta.org/metals/latests.json",
+                    headers={"Accept": "application/json"},
+                    method="GET"
+                )
+                httpresponse = urlopen(httprequest)
+                body = json.loads(httpresponse.read().decode())
+                if server_version == _LATEST_SNAPSHOT:
+                    server_version = body.get("snapshot")
+                else:
+                    server_version = body.get("release")
+            except:
+                return "Couldn't get latest version number from scalameta website, please set the 'server_version'"
 
         properties = prepare_server_properties(plugin_settings.get("server_properties"))
         command = create_launch_command(java_path, server_version, properties)
