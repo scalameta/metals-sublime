@@ -31,5 +31,6 @@
             "base_file": "${packages}/LSP-metals/LSP-metals.sublime-settings",
             "default": "{\n\t$0\n}\n"
         }
-    }
+    },
+    { "caption": "LSP-metals: New Java File", "command": "lsp_metals_new_java_file", "args":{"paths": []}},
 ]
