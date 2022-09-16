@@ -40,7 +40,7 @@ class Metals(AbstractPlugin):
         if not java_path :
             return "Please install java or set the 'java_home' setting"
         server_version = plugin_settings.get('server_version', _LATEST_STABLE)
-        if server_version == _LATEST_STABLE or server_version == _LATEST_SNAPSHOT:
+        if not server_version or server_version == _LATEST_STABLE or server_version == _LATEST_SNAPSHOT:
             try:
                 httprequest = Request(
                     "https://scalameta.org/metals/latests.json",
