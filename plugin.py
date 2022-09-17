@@ -23,7 +23,6 @@ else:
     from . commands.lsp_metals_goto import LspMetalsGoto
     from . commands.lsp_metals_metals_goto_location import LspMetalsMetalsGotoLocationCommand
     from . commands.lsp_metals_goto_super_method import LspMetalsSendPositionCommand
-    from . commands.lsp_metals_new_scala_file import LspMetalsNewScalaFileCommand
     from . commands.lsp_metals_text_command import LspMetalsTextCommand
     from . core.decorations import WorksheetListener, LspMetalsClearPhantomsCommand
     from . commands.lsp_metals_copy_worksheet import LspMetalsCopyWorksheetCommand
