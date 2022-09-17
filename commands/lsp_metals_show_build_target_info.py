@@ -1,6 +1,7 @@
 from . lsp_metals_execute_command import LspMetalsExecuteCommand
 from LSP.plugin.core.types import List, Any
 
+import os
 
 class LspMetalsShowBuildTargetInfoCommand(LspMetalsExecuteCommand):
 
@@ -16,5 +17,5 @@ class LspMetalsShowBuildTargetInfoCommand(LspMetalsExecuteCommand):
             session = self.session_by_name(self.session_name)
             root = session.get_workspace_folders()[0]
             target_name = items[index]
-            path  = "file:///{}/{}".format(root, target_name)
+            path  = os.path.join(root.uri(), target_name)
             self.view.run_command("lsp_metals_file_decoder", {"decoding_type": "metals-buildtarget", "file_path": path})
