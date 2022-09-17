@@ -47,5 +47,9 @@
             "command_args": ["${file_uri}"]
         }
     },
-    { "caption": "LSP-metals: Show Build Target Info", "command": "lsp_metals_show_build_target_info"}
+     {
+        "caption": "LSP-metals: Show Build Target Info",
+        "command": "lsp_metals_show_build_target_info",
+        "args": {"command_name": "list-build-targets"}
+    }   
 ]
