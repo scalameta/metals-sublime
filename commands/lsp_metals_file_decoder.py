@@ -22,17 +22,22 @@ class LspMetalsFileDecoderCommand(LspMetalsTextCommand):
             'semanticdb-detailed': _sematicdb_extentions,
             'semanticdb-proto': _sematicdb_extentions
         }
+    _build_target = 'metals-buildtarget'
 
-    def is_enabled(self, decoding_type: str) -> bool:
+    def is_enabled(self, decoding_type: str, file_path: str = '') -> bool:
         if super().is_enabled(None, None):
             extension = os.path.splitext(self.view.file_name())[1][1:]
             accepted_extentions = self._decoders.get(decoding_type)
-            return accepted_extentions is not None and extension in accepted_extentions
+            return decoding_type == self._build_target or (accepted_extentions is not None and extension in accepted_extentions)
         else:
             return False
 
-    def run(self, edit: sublime.Edit, decoding_type: str) -> None:
-        uri = 'metalsDecode:' + filename_to_uri(self.view.file_name()) + '.' + decoding_type
+    def run(self, edit: sublime.Edit, decoding_type: str, file_path: str = '') -> None:
+        path = file_path
+        if not path:
+            path = filename_to_uri(self.view.file_name())
+
+        uri = 'metalsDecode:' + path + '.' + decoding_type
         session = self.session_by_name(self.session_name)
         if session:
             params = {
