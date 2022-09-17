@@ -1,8 +1,0 @@
-[
-  {
-    "caption": "New Scala File",
-    "id": "new_scala_file",
-    "command": "new_scala_file",
-    "args": {"paths": []}
-  }
-]

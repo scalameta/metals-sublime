@@ -22,7 +22,6 @@
     { "caption": "LSP-metals: Show semanticdb detailed", "command": "lsp_metals_file_decoder", "args":{"decoding_type": "semanticdb-detailed"}},
     { "caption": "LSP-metals: Show semanticdb proto", "command": "lsp_metals_file_decoder", "args":{"decoding_type": "semanticdb-proto"}},
     { "caption": "LSP-metals: Find in dependency", "command": "lsp_metals_find_in_dependency", "args":{}},
-    { "caption": "LSP-metals: New Scala File", "command": "lsp_metals_new_scala_file", "args":{"paths": []}},
     { "caption": "LSP-metals: Analyze Stacktrace", "command": "lsp_metals_analyze_stacktrace"},
     {
         "caption": "LSP-metals: Settings",
@@ -32,5 +31,20 @@
             "default": "{\n\t$0\n}\n"
         }
     },
-    { "caption": "LSP-metals: New Java File", "command": "lsp_metals_new_java_file", "args":{"paths": []}},
+    {
+        "caption": "LSP-metals: New Scala File",
+        "command": "lsp_metals_execute",
+        "args":{
+            "command_name": "new-scala-file",
+            "command_args": ["${file_uri}"]
+        }
+    },
+    {
+        "caption": "LSP-metals: New Java File",
+        "command": "lsp_metals_execute",
+        "args":{
+            "command_name": "new-java-file",
+            "command_args": ["${file_uri}"]
+        }
+    }
 ]
