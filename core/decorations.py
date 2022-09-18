@@ -1,8 +1,6 @@
 from .. commands.lsp_metals_text_command import LspMetalsTextCommand
 from functools import reduce, partial
-from LSP.plugin.core.css import css
-from LSP.plugin.core.protocol import Range
-from LSP.plugin.core.sessions import Session
+from LSP.plugin import css, Session
 from LSP.plugin.core.typing import Any, List, Dict, Optional, Union
 from LSP.plugin.core.views import range_to_region, FORMAT_MARKED_STRING, FORMAT_MARKUP_CONTENT, minihtml
 
@@ -17,6 +15,7 @@ class WorksheetListener(sublime_plugin.ViewEventListener):
         if file_name and file_name.endswith('.worksheet.sc'):
             self.view.run_command('lsp_metals_clear_phantoms')
 
+
 class LspMetalsClearPhantomsCommand(LspMetalsTextCommand):
     def run(self, edit: sublime.Edit) -> None:
         fname = self.view.file_name()
@@ -29,6 +28,7 @@ class LspMetalsClearPhantomsCommand(LspMetalsTextCommand):
         if not session:
             return
         handle_decorations(session, fname)
+
 
 def handle_decorations(session: Session, params: Union[Dict[str, Any], str]) -> None:
     phantom_key = "metals_decoraction"
@@ -61,9 +61,11 @@ def handle_decorations(session: Session, params: Union[Dict[str, Any], str]) -> 
 
         phantom_set.update(phantoms)
 
+
 PHANTOM_HTML = """
 <style>div.phantom {{font-style: italic; color: {}}}</style>
 <div class='phantom'>{}{}</div>"""
+
 
 def show_popup(content: Dict[str, Any], view: sublime.View, location: int) -> None:
     html = minihtml(view, content, allowed_formats=FORMAT_MARKED_STRING | FORMAT_MARKUP_CONTENT)
@@ -81,13 +83,12 @@ def show_popup(content: Dict[str, Any], view: sublime.View, location: int) -> No
 
 
 def decoration_to_phantom(option: Dict[str, Any], view: sublime.View) -> Optional[sublime.Phantom]:
-    decoration_range = Range.from_lsp(option['range'])
-    region = range_to_region(decoration_range, view)
+    region = range_to_region(option['range'], view)
     region.a = region.b  # make the start point equal to the end point
     hoverMessage = deep_get(option, 'hoverMessage')
     contentText = deep_get(option, 'renderOptions', 'after', 'contentText')
     link = ''
-    point = view.text_point(decoration_range.start.row, decoration_range.start.col)
+    point = view.text_point(option['start'].row, option['start'].col)
     if hoverMessage:
         link = " <a href='more'>more</a>"
 
@@ -101,8 +102,10 @@ def decoration_to_phantom(option: Dict[str, Any], view: sublime.View) -> Optiona
 
     return phantom
 
+
 def decorations_to_phantom(options: Dict[str, Any], view: sublime.View) -> List[sublime.Phantom]:
     return map(lambda o: decoration_to_phantom(o, view), options)
+
 
 def deep_get(dictionary: Dict[str, Any], *keys):
     return reduce(lambda d, key: d.get(key) if d else None, keys, dictionary)

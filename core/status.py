@@ -1,7 +1,8 @@
+from LSP.plugin import Session
 from LSP.plugin.core.types import Any
-from LSP.plugin.core.sessions import Session
 
 status_key = "metals-status"
+
 
 def handle_status(session: Session, params: Any) -> None:
     """Handle the metals/status notification."""
