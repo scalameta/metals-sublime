@@ -1,10 +1,9 @@
 from collections import OrderedDict
 from . status import status_key
 from .. commands.utils import open_location
-from LSP.plugin.core.sessions import Session
+from LSP.plugin import Session
 from LSP.plugin.core.types import Any
 import json
-import sublime
 import mdpopups
 
 
@@ -26,17 +25,20 @@ def handle_execute_client(session: Session, params: Any) -> None:
         msg = "Unknown command {}".format(command_name)
         session.set_window_status_async(status_key, msg)
 
+
 def goto_location(session: Session, args: Any) -> None:
     """https://scalameta.org/metals/docs/integrations/new-editor/#goto-location"""
 
     if isinstance(args, list) and args:
         open_location(session.window, args[0])
 
+
 def show_stacktrace(session: Session, args: Any) -> None:
     """https://scalameta.org/metals/docs/integrations/new-editor/#show-the-stacktrace-in-the-client"""
 
     if isinstance(args, list) and args:
         session.window.new_html_sheet('Stacktrace', args[0])
+
 
 def run_doctor(session: Session, args: Any) -> None:
     if isinstance(args, list) and args:

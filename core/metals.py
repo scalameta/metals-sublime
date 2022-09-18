@@ -7,7 +7,7 @@ from distutils.version import LooseVersion
 from LSP.plugin import AbstractPlugin
 from LSP.plugin import ClientConfig
 from LSP.plugin import WorkspaceFolder
-from LSP.plugin.core.types import Optional, Any, Tuple, List
+from LSP.plugin.core.types import Optional, Any, List
 from urllib.request import urlopen, Request
 import json
 
@@ -17,6 +17,7 @@ import os
 _COURSIER_PATH = os.path.join(os.path.dirname(__file__), '..', 'coursier')
 _LATEST_STABLE = "latest-stable"
 _LATEST_SNAPSHOT = "latest-snapshot"
+
 
 class Metals(AbstractPlugin):
 
@@ -88,6 +89,7 @@ class Metals(AbstractPlugin):
             return
         handle_input_box(session, params, request_id)
 
+
 def get_java_path(settings: sublime.Settings) -> str:
     java_home = settings.get("java_home")
     if isinstance(java_home, str) and java_home:
@@ -96,6 +98,7 @@ def get_java_path(settings: sublime.Settings) -> str:
     if java_home:
         return os.path.join(java_home, "bin", "java")
     return "java"
+
 
 def create_launch_command(java_path: str, artifact_version: str, server_properties: List[str]) -> List[str]:
     binary_version = "2.12"
