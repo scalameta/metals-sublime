@@ -9,6 +9,8 @@ from LSP.plugin import ClientConfig
 from LSP.plugin import WorkspaceFolder
 from LSP.plugin.core.types import Optional, Any, List
 from urllib.request import urlopen, Request
+from LSP.plugin.core.typing import Callable, Mapping
+from .. commands.lsp_metals_debug import metals_run_session_start
 import json
 
 import sublime
@@ -61,6 +63,19 @@ class Metals(AbstractPlugin):
         command = create_launch_command(java_path, server_version, properties)
         configuration.command = command
         return None
+
+    # Register custom commands
+
+    def on_pre_server_command(self, command: Mapping[str, Any], done: Callable[[], None]) -> bool:
+        session = self.weaksession()
+        if not session:
+            return False
+        cmd = command["command"]
+        if cmd == "metals-run-session-start":
+            args = command["arguments"][0]
+            metals_run_session_start(session, args)
+            return True
+        return False
 
     # notification and request handlers
 
