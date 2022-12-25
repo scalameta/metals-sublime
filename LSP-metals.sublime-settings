@@ -31,7 +31,8 @@
     "commandInHtmlFormat": "sublime",
     "doctorProvider": "json",
     "isHttpEnabled": false,
-    "doctorVisibilityProvider": false
+    "doctorVisibilityProvider": false,
+    "debuggingProvider": true
   },
 
   "settings": {
