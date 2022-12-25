@@ -88,7 +88,7 @@ def decoration_to_phantom(option: Dict[str, Any], view: sublime.View) -> Optiona
     hoverMessage = deep_get(option, 'hoverMessage')
     contentText = deep_get(option, 'renderOptions', 'after', 'contentText')
     link = ''
-    point = view.text_point(option['start'].row, option['start'].col)
+    point = view.text_point(option['range']['start']['line'], option['range']['start']['character'])
     if hoverMessage:
         link = " <a href='more'>more</a>"
 
