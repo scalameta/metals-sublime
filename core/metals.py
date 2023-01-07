@@ -17,7 +17,7 @@ import os
 _COURSIER_PATH = os.path.join(os.path.dirname(__file__), '..', 'coursier')
 _LATEST_STABLE = "latest-stable"
 _LATEST_SNAPSHOT = "latest-snapshot"
-
+_LATEST_STABLE_ARTIFACT = "latest.stable"
 
 class Metals(AbstractPlugin):
 
@@ -40,8 +40,10 @@ class Metals(AbstractPlugin):
         java_path = get_java_path(plugin_settings)
         if not java_path :
             return "Please install java or set the 'java_home' setting"
+
         server_version = plugin_settings.get('server_version', _LATEST_STABLE)
-        if not server_version or server_version == _LATEST_STABLE or server_version == _LATEST_SNAPSHOT:
+
+        if server_version == _LATEST_SNAPSHOT:
             try:
                 httprequest = Request(
                     "https://scalameta.org/metals/latests.json",
@@ -50,12 +52,11 @@ class Metals(AbstractPlugin):
                 )
                 httpresponse = urlopen(httprequest)
                 body = json.loads(httpresponse.read().decode())
-                if server_version == _LATEST_SNAPSHOT:
-                    server_version = body.get("snapshot")
-                else:
-                    server_version = body.get("release")
+                server_version = body.get("snapshot")
             except:
                 return "Couldn't get latest version number from scalameta website, please set the 'server_version'"
+        elif not server_version or server_version == _LATEST_STABLE:
+            server_version = _LATEST_STABLE_ARTIFACT
 
         properties = prepare_server_properties(plugin_settings.get("server_properties"))
         command = create_launch_command(java_path, server_version, properties)
@@ -102,7 +103,7 @@ def get_java_path(settings: sublime.Settings) -> str:
 
 def create_launch_command(java_path: str, artifact_version: str, server_properties: List[str]) -> List[str]:
     binary_version = "2.12"
-    if LooseVersion(artifact_version) > LooseVersion("0.11.2"):
+    if artifact_version == _LATEST_STABLE_ARTIFACT or LooseVersion(artifact_version) > LooseVersion("0.11.2"):
         binary_version = "2.13"
 
     return [java_path] + server_properties + [
