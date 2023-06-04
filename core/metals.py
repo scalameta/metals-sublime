@@ -6,8 +6,14 @@ from .. commands.lsp_metals_text_command import LspMetalsTextCommand
 from distutils.version import LooseVersion
 from LSP.plugin import AbstractPlugin
 from LSP.plugin import ClientConfig
+from LSP.plugin import Request as LspRequest
 from LSP.plugin import WorkspaceFolder
-from LSP.plugin.core.types import Optional, Any, List
+from LSP.plugin.core.protocol import Position
+from LSP.plugin.core.typing import Optional, Any, List
+from LSP.plugin.core.views import first_selection_region
+from LSP.plugin.core.views import Point
+from LSP.plugin.core.views import point_to_offset
+from LSP.plugin.core.views import region_to_range
 from urllib.request import urlopen, Request
 import json
 
@@ -18,6 +24,7 @@ _COURSIER_PATH = os.path.join(os.path.dirname(__file__), '..', 'coursier')
 _LATEST_STABLE = "latest-stable"
 _LATEST_SNAPSHOT = "latest-snapshot"
 _LATEST_STABLE_ARTIFACT = "latest.stable"
+
 
 class Metals(AbstractPlugin):
 
@@ -33,7 +40,7 @@ class Metals(AbstractPlugin):
         workspace_folders: List[WorkspaceFolder],
         configuration: ClientConfig
     ) -> Optional[str]:
-        if not workspace_folders :
+        if not workspace_folders:
             return "No workspace detected. Try opening your project at the workspace root."
 
         plugin_settings = sublime.load_settings("LSP-metals.sublime-settings")
@@ -63,13 +70,28 @@ class Metals(AbstractPlugin):
         configuration.command = command
         return None
 
+    def on_pre_send_request_async(self, request_id: int, request: LspRequest) -> None:
+        if request.method == 'textDocument/hover' and request.view:
+            session = self.weaksession()
+            if not session:
+                return
+            if not session.get_capability('experimental.rangeHoverProvider'):
+                return
+            view = request.view
+            region = first_selection_region(view)
+            if region is not None:
+                position = request.params['position']  # type: Position
+                point = point_to_offset(Point.from_lsp(position), view)
+                if region.contains(point):
+                    request.params['range'] = region_to_range(view, region)
+
     # notification and request handlers
 
     def m_metals_status(self, params: Any) -> None:
         session = self.weaksession()
         if not session:
             return
-        handle_status(session,params)
+        handle_status(session, params)
 
     def m_metals_publishDecorations(self, decorationsParams: Any) -> None:
         session = self.weaksession()
