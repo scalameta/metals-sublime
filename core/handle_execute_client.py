@@ -41,86 +41,126 @@ def show_stacktrace(session: Session, args: Any) -> None:
 
 
 def run_doctor(session: Session, args: Any) -> None:
+
+    def parse_build_target(targets, doctor_version) -> str:
+        default_target_labels = OrderedDict([
+            ('targetType', 'Target Type'),
+            ('compilationStatus', 'Compilation status'),
+            ('diagnostics', 'Diagnostics'),
+            ('interactive', 'Interactive'),
+            ('semanticdb', 'SemanticDB'),
+            ('debugging', 'Debugging'),
+            ('java', 'Java Support'),
+            ('recommendation', 'Recommendation')
+        ])
+
+        legacy_target_labels = OrderedDict([
+            ('scalaVersion', 'Scala Version'),
+            ('diagnostics', 'Diagnostics'),
+            ('gotoDefinition', 'Goto Definition'),
+            ('completions', 'Completions'),
+            ('findReferences', 'Find References')
+        ])
+
+        target_labels = default_target_labels if doctor_version > 0 else legacy_target_labels
+
+        if not targets:
+            return ''
+
+        lines = []
+        markdown = "## Build Targets\n"
+        for target in targets:
+            lines.append('#### {}'.format(target.get('buildTarget')))
+            lines.append('```')
+
+            for field, label in target_labels.items():
+                if target.get(field):
+                    lines.append('* {0:<20}: {1}'.format(label, target.get(field)))
+
+            lines.append("```")
+
+        markdown += "{}\n\n".format('\n'.join(lines))
+
+        return  markdown
+
+    def parse_explanations(explanations) -> str:
+        if explanations:
+            markdown = "## Explanations\n"
+            for explanation in explanations:
+                markdown += '{}\n\n'.format(explanation.get('title'))
+                for deep_explanation in explanation.get('explanations'):
+                    markdown += '* {}\n'.format(deep_explanation)
+                markdown += '\n\n'
+            return markdown
+        else:
+            return ''
+
+
     if isinstance(args, list) and args:
-
         content = json.loads(args[0])
-
         doctor_version = 0 if content.get('version') is None else int(content.get('version'))
 
         header = content.get('header')
-        messages = content.get('messages')
-        targets = content.get('targets')
-        explanations = content.get('explanations')
-
         markdown = "# {} \n\n".format(content.get('title'))
 
-        if doctor_version >= 3:
+        if doctor_version == 4:
             fields = [
-              'buildTool',
-              'buildServer',
-              'importBuildStatus',
-              'jdkInfo',
-              'serverInfo'
+                'buildTargetDescription',
+                'serverInfo',
+                'jdkInfo'
             ]
 
+            other_fields = OrderedDict([
+                ('buildTool', 'Build tool'),
+                ('buildServer', 'Build Server'),
+                ('importBuildStatus', 'Import Build Status')
+            ])
+
             for field in fields:
-              if header.get(field):
-                markdown += "{} \n\n".format(header.get(field))
+                value = header.get(field)
+                if value:
+                    markdown += "{} \n\n".format(value)
 
-            markdown += "{} \n\n".format(header.get('buildTargetDescription'))
+            folders = content.get('folders')
+            for folder in folders:
+                header = folder.get('header')
+                for field, label in other_fields.items():
+                    if header.get(field):
+                        markdown += "{}: {} \n\n".format(label, header.get(field))
+
+                markdown += parse_build_target(folder.get('targets'), doctor_version)
+                markdown += parse_explanations(folder.get('explanations'))
         else:
-            markdown += "{} \n\n".format(content.get('headerText'))
+            messages = content.get('messages')
+            targets = content.get('targets')
+            explanations = content.get('explanations')
 
-        if messages:
-            for message in messages:
-                markdown += "### {} \n".format(message.get('title'))
-                for recommendation in message.get('recommendations'):
-                    markdown += '* {}\n'.format(recommendation)
-                markdown += '\n\n'
-        elif targets:
-            markdown += "## Build Targets\n"
+            if doctor_version == 3:
+                fields = [
+                  'buildTool',
+                  'buildServer',
+                  'importBuildStatus',
+                  'jdkInfo',
+                  'serverInfo'
+                ]
 
-            default_target_labels = OrderedDict([
-                ('targetType', 'Target Type'),
-                ('compilationStatus', 'Compilation status'),
-                ('diagnostics', 'Diagnostics'),
-                ('interactive', 'Interactive'),
-                ('semanticdb', 'SemanticDB'),
-                ('debugging', 'Debugging'),
-                ('java', 'Java Support'),
-                ('recommendation', 'Recommendation')
-            ])
+                for field in fields:
+                  if header.get(field):
+                    markdown += "{} \n\n".format(header.get(field))
 
-            legacy_target_labels = OrderedDict([
-                ('scalaVersion', 'Scala Version'),
-                ('diagnostics', 'Diagnostics'),
-                ('gotoDefinition', 'Goto Definition'),
-                ('completions', 'Completions'),
-                ('findReferences', 'Find References')
-            ])
+                markdown += "{} \n\n".format(header.get('buildTargetDescription'))
+            else:
+                markdown += "{} \n\n".format(content.get('headerText'))
 
-            target_labels = default_target_labels if doctor_version > 0 else legacy_target_labels
-
-            lines = []
-            for target in targets:
-                lines.append('#### {}'.format(target.get('buildTarget')))
-                lines.append('```')
-
-                for field, label in target_labels.items():
-                    if target.get(field):
-                        lines.append('* {0:<20}: {1}'.format(label, target.get(field)))
-
-                lines.append("```")
-
-            markdown += "{}\n\n".format('\n'.join(lines))
-
-            if explanations:
-                markdown += "## Explanations\n"
-                for explanation in explanations:
-                    markdown += '{}\n\n'.format(explanation.get('title'))
-                    for deep_explanation in explanation.get('explanations'):
-                        markdown += '* {}\n'.format(deep_explanation)
+            if messages:
+                for message in messages:
+                    markdown += "### {} \n".format(message.get('title'))
+                    for recommendation in message.get('recommendations'):
+                        markdown += '* {}\n'.format(recommendation)
                     markdown += '\n\n'
+            elif targets:
+                markdown += parse_build_target(targets, doctor_version)
+                markdown += parse_explanations(explanations)
 
         custom_css = """
         .metals-doctor { padding: 1.5rem }
