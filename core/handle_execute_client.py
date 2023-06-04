@@ -104,19 +104,19 @@ def run_doctor(session: Session, args: Any) -> None:
         markdown = "# {} \n\n".format(content.get('title'))
 
         if doctor_version == 4:
-            fields = [
+            header_fields = [
                 'buildTargetDescription',
                 'serverInfo',
                 'jdkInfo'
             ]
 
-            other_fields = OrderedDict([
+            folder_header_fields = OrderedDict([
                 ('buildTool', 'Build tool'),
                 ('buildServer', 'Build Server'),
                 ('importBuildStatus', 'Import Build Status')
             ])
 
-            for field in fields:
+            for field in header_fields:
                 value = header.get(field)
                 if value:
                     markdown += "{} \n\n".format(value)
@@ -124,7 +124,7 @@ def run_doctor(session: Session, args: Any) -> None:
             folders = content.get('folders')
             for folder in folders:
                 header = folder.get('header')
-                for field, label in other_fields.items():
+                for field, label in folder_header_fields.items():
                     if header.get(field):
                         markdown += "{}: {} \n\n".format(label, header.get(field))
 
