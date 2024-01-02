@@ -95,6 +95,33 @@ def run_doctor(session: Session, args: Any) -> None:
         else:
             return ''
 
+    def parse_error_reports(error_reports) -> str:
+        if error_reports:
+            error_report_labels = OrderedDict(
+                [
+                    ('timestamp', 'Timestamp'),
+                    ('uri', 'URI'),
+                    ('buildTarget', 'Build Target'),
+                    ('errorReportType', 'Type'),
+                ]
+            )
+            markdown = "## Error Reports\n"
+
+            for error_report in error_reports:
+                markdown += "#### {}\n".format(error_report.get("name"))
+                lines = []
+                lines.append("```")
+                for field, label in error_report_labels.items():
+                    if error_report.get(field):
+                        lines.append(
+                            "* {0:<14}: {1}".format(label, error_report.get(field))
+                        )
+                lines.append("```")
+                markdown += "{}\n".format("\n".join(lines))
+                markdown += "{}\n\n".format(error_report.get("shortSummary"))
+            return markdown
+        else:
+            return ""
 
     if isinstance(args, list) and args:
         content = json.loads(args[0])
@@ -130,6 +157,7 @@ def run_doctor(session: Session, args: Any) -> None:
 
                 markdown += parse_build_target(folder.get('targets'), doctor_version)
                 markdown += parse_explanations(folder.get('explanations'))
+                markdown += parse_error_reports(folder.get('errorReports'))
         else:
             messages = content.get('messages')
             targets = content.get('targets')
