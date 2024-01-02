@@ -103,7 +103,7 @@ def run_doctor(session: Session, args: Any) -> None:
         header = content.get('header')
         markdown = "# {} \n\n".format(content.get('title'))
 
-        if doctor_version == 4:
+        if doctor_version >= 4:
             header_fields = [
                 'buildTargetDescription',
                 'serverInfo',
