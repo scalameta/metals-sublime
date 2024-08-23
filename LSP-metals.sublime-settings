@@ -9,6 +9,8 @@
   // Attach to views with base scope source.scala or source.java
   "selector": "source.scala, source.java",
 
+  "schemes": ["file", "jar"],
+
   // Optional array of properties to pass along to the Metals server.
   // Example: `-Dhttps.proxyHost=… -Dhttps.proxyPort=…` or `-Dmetals.statistics=all`
   // check https://scalameta.org/metals/docs/integrations/new-editor/#metals-server-properties for all properties

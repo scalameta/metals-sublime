@@ -2,14 +2,15 @@ from . decorations import handle_decorations
 from . handle_execute_client import handle_execute_client
 from . handle_input_box import handle_input_box
 from . status import handle_status
+from .. commands.utils import handle_error
 from .. commands.lsp_metals_text_command import LspMetalsTextCommand
 from distutils.version import LooseVersion
 from LSP.plugin import AbstractPlugin
 from LSP.plugin import ClientConfig
 from LSP.plugin import Request as LspRequest
 from LSP.plugin import WorkspaceFolder
-from LSP.plugin.core.protocol import Position
-from LSP.plugin.core.typing import Optional, Any, List
+from LSP.plugin.core.protocol import DocumentUri, Error, Position
+from LSP.plugin.core.typing import Callable, Optional, Any, List
 from LSP.plugin.core.views import first_selection_region
 from LSP.plugin.core.views import Point
 from LSP.plugin.core.views import point_to_offset
@@ -84,6 +85,34 @@ class Metals(AbstractPlugin):
                 point = point_to_offset(Point.from_lsp(position), view)
                 if region.contains(point):
                     request.params['range'] = region_to_range(view, region)
+
+    def on_open_uri_async(self, uri: DocumentUri, callback: Callable[[str, str, str], None]) -> bool:
+        if not uri.startswith("jar:"):
+            return False
+
+        session = self.weaksession()
+        if not session:
+            return False
+
+        params = { "command": "file-decode", "arguments": [uri] }
+
+        def handle_response(response: Any) -> None:
+            if isinstance(response, Error) or 'error' in response:
+                handle_error("file-decode", response)
+            if response and 'value' in response:
+                basename = os.path.basename(response['requestedUri'])
+                syntax = "Packages/Scala/Scala.sublime-syntax"
+                if basename.endswith('.java'):
+                    syntax = "Packages/Java/Java.sublime-syntax"
+
+                callback(
+                    basename,
+                    response['value'],
+                    syntax
+                )
+
+        session.execute_command(params, progress=True).then(handle_response)
+        return True
 
     # notification and request handlers
 
