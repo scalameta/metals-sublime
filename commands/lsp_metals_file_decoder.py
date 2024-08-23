@@ -1,10 +1,11 @@
 from . lsp_metals_text_command import LspMetalsTextCommand
-from . utils import handle_error
+from . utils import handle_error, create_readonly_dependency_file
 from LSP.plugin.core.protocol import Error
 from LSP.plugin.core.typing import Any
 from LSP.plugin.core.url import filename_to_uri  # TODO: deprecated in a future version
 
 import os
+import re
 import sublime
 
 class LspMetalsFileDecoderCommand(LspMetalsTextCommand):
@@ -28,7 +29,7 @@ class LspMetalsFileDecoderCommand(LspMetalsTextCommand):
         if super().is_enabled(None, None):
             extension = os.path.splitext(self.view.file_name())[1][1:]
             accepted_extentions = self._decoders.get(decoding_type)
-            return decoding_type == self._build_target or (accepted_extentions is not None and extension in accepted_extentions)
+            return decoding_type == self._build_target or decoding_type == 'jar' or (accepted_extentions is not None and extension in accepted_extentions)
         else:
             return False
 
@@ -38,6 +39,9 @@ class LspMetalsFileDecoderCommand(LspMetalsTextCommand):
             path = filename_to_uri(self.view.file_name())
 
         uri = 'metalsDecode:' + path + '.' + decoding_type
+        if decoding_type == 'jar':
+            uri = 'metalsDecode:' + path
+
         session = self.session_by_name(self.session_name)
         if session:
             params = {
@@ -50,10 +54,22 @@ class LspMetalsFileDecoderCommand(LspMetalsTextCommand):
                     handle_error(self._command, response)
                 elif response and 'value' in response:
                     window = self.view.window()
-                    view = window.new_file()
-                    view.set_scratch(True)
-                    view.set_name(os.path.basename(response['requestedUri']))
-                    view.run_command("append", {"characters": response['value']})
-                    view.set_read_only(True)
+                    if decoding_type == 'jar':
+                        # extract the jar from uri
+                        regex = r"(?:\/(?:.*))+\/(.*\.jar)\!(.*)"
+                        matches = re.search(regex, uri)
+                        if matches:
+                            file_path = matches.group(1) + matches.group(2)
+                            folder = window.extract_variables()['folder']
+                            full_path = create_readonly_dependency_file(folder, file_path, response['value'])
+                            window.open_file(full_path)
+                        else:
+                            sublime.error_message(f"Unable to extract path from URI: {uri}")
+                    else:
+                        view = window.new_file()
+                        view.set_scratch(True)
+                        view.set_name(os.path.basename(response['requestedUri']))
+                        view.run_command("append", {"characters": response['value']})
+                        view.set_read_only(True)
 
             session.execute_command(params, progress=True).then(handle_response)

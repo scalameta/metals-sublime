@@ -8,8 +8,8 @@ from LSP.plugin import AbstractPlugin
 from LSP.plugin import ClientConfig
 from LSP.plugin import Request as LspRequest
 from LSP.plugin import WorkspaceFolder
-from LSP.plugin.core.protocol import Position
-from LSP.plugin.core.typing import Optional, Any, List
+from LSP.plugin.core.protocol import DocumentUri, Position
+from LSP.plugin.core.typing import Callable, Optional, Any, List
 from LSP.plugin.core.views import first_selection_region
 from LSP.plugin.core.views import Point
 from LSP.plugin.core.views import point_to_offset
@@ -84,6 +84,17 @@ class Metals(AbstractPlugin):
                 point = point_to_offset(Point.from_lsp(position), view)
                 if region.contains(point):
                     request.params['range'] = region_to_range(view, region)
+
+    def on_open_uri_async(self, uri: DocumentUri, callback: Callable[[str, str, str], None]) -> bool:
+        if uri.startswith("jar:"):
+            session = self.weaksession()
+            if not session:
+                return False
+            view = session.window.active_view()
+            view.run_command("lsp_metals_file_decoder", {"decoding_type": "jar", "file_path": uri})
+            return True
+        else:
+            return False
 
     # notification and request handlers
 

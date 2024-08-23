@@ -6,7 +6,21 @@ from LSP.plugin.core.typing import Any, Dict, Optional
 from LSP.plugin.core.url import parse_uri
 from LSP.plugin.core.views import to_encoded_filename
 
+import os
 import sublime
+
+def create_readonly_dependency_file(folder: str, file_path: str, content: str) -> str:
+    metals_dependencies_path = f"{folder}/.metals/readonly/dependencies"
+    full_path = f"{metals_dependencies_path}/{file_path}"
+
+    dir_path = os.path.dirname(full_path)
+    os.makedirs(dir_path, exist_ok=True)
+
+    with open(full_path, 'w') as f:
+        f.write(content)
+
+    return full_path
+
 
 def handle_error(command: str, error: Dict[str, Any]) -> None:
     msg = "command '{}' failed. Reason: {}".format(command, str(error))
