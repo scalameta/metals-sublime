@@ -100,13 +100,19 @@ class Metals(AbstractPlugin):
             if isinstance(response, Error) or 'error' in response:
                 handle_error("file-decode", response)
             if response and 'value' in response:
-                basename = os.path.basename(response['requestedUri'])
+
+                title = response['requestedUri']
+                uri_parts = str(response['requestedUri']).split("!")
+                if len(uri_parts) == 2:
+                    jar_source, path_to_file = uri_parts
+                    title = f"{os.path.basename(jar_source)}!{path_to_file}"
+
                 syntax = "Packages/Scala/Scala.sublime-syntax"
-                if basename.endswith('.java'):
+                if title.endswith('.java'):
                     syntax = "Packages/Java/Java.sublime-syntax"
 
                 callback(
-                    basename,
+                    title,
                     response['value'],
                     syntax
                 )
