@@ -1,5 +1,4 @@
 from collections import OrderedDict
-from . status import status_key
 from .. commands.utils import open_location
 from LSP.plugin import Session
 from LSP.plugin.core.types import Any
@@ -23,7 +22,7 @@ def handle_execute_client(session: Session, params: Any) -> None:
         run_doctor(session, args)
     else:
         msg = "Unknown command {}".format(command_name)
-        session.set_window_status_async(status_key, msg)
+        session.window.status_message(msg)
 
 
 def goto_location(session: Session, args: Any) -> None:
