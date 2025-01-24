@@ -1,4 +1,3 @@
-from . decorations import handle_decorations
 from . handle_execute_client import handle_execute_client
 from . handle_input_box import handle_input_box
 from . status import handle_status
@@ -127,12 +126,6 @@ class Metals(AbstractPlugin):
         if not session:
             return
         handle_status(session, params)
-
-    def m_metals_publishDecorations(self, decorationsParams: Any) -> None:
-        session = self.weaksession()
-        if not session:
-            return
-        handle_decorations(session, decorationsParams)
 
     def m_metals_executeClientCommand(self, params: Any) -> None:
         session = self.weaksession()

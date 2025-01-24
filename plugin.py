@@ -27,7 +27,6 @@ else:
     from . commands.lsp_metals_run_scalafix import LspMetalsRunScalafixCommand
     from . commands.lsp_metals_show_build_target_info import LspMetalsShowBuildTargetInfoCommand
     from . commands.lsp_metals_text_command import LspMetalsTextCommand
-    from . core.decorations import WorksheetListener, LspMetalsClearPhantomsCommand
     from . core.metals import Metals
 
     def plugin_loaded() -> None:
