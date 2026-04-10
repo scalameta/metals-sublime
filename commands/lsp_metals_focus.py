@@ -1,6 +1,5 @@
 from . lsp_metals_text_command import LspMetalsTextCommand
 from LSP.plugin.core.protocol import Notification
-from LSP.plugin.core.types import Optional, Dict, Any
 
 import sublime
 import sublime_plugin
