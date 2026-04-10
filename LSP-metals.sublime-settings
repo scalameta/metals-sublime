@@ -26,10 +26,6 @@
     "executeClientCommandProvider": true,
     "statusBarProvider": "on",
     "inputBoxProvider": true,
-    // When enabled, shows worksheet evaluations as Sublime.Phantom instead of code comments.
-    "decorationProvider": true,
-    // When enabled, inferred types and implicits are shown as as Sublime.Phantom.
-    "inlineDecorationProvider": true,
     "commandInHtmlFormat": "sublime",
     "doctorProvider": "json",
     "isHttpEnabled": false,
@@ -39,12 +35,11 @@
   "settings": {
     "metals": {
       "superMethodLensesEnabled": true,
-      // When enabled, each method and variable that can have inferred types has them displayed.
-      "showInferredType": false,
-      // When enabled, each method that has implicit arguments has them displayed.
-      "showImplicitArguments": false,
-      // When enabled, each place where an implicit method or class is used has it displayed.
-      "showImplicitConversionsAndClasses": false
+      "inlayHints.typeParameters.enable": false,
+      "inlayHints.implicitConversions.enable": false,
+      "inlayHints.implicitArguments.enable": false,
+      "inlayHints.inferredTypes.enable": false,
+      "inlayHints.hintsInPatternMatch.enable": false
     }
   }
 }
