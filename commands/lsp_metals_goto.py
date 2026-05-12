@@ -1,6 +1,6 @@
 from . utils import get_session, handle_error
 from LSP.plugin.core.protocol import Error
-from LSP.plugin.core.types import List, Any
+from typing import List, Any
 
 import sublime_plugin
 

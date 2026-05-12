@@ -1,5 +1,5 @@
 from . lsp_metals_execute_command import LspMetalsExecuteCommand
-from LSP.plugin.core.types import List, Any
+from typing import List, Any
 
 import os
 
