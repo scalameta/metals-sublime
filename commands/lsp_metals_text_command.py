@@ -1,5 +1,7 @@
-from LSP.plugin.core.registry import LspTextCommand
-from .. core.constants import SESSION_NAME
+from __future__ import annotations
+
+from ..core.constants import SESSION_NAME
+from LSP.plugin import LspTextCommand
 
 
 class LspMetalsTextCommand(LspTextCommand):

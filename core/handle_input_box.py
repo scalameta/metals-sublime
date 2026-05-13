@@ -1,5 +1,9 @@
-from LSP.plugin import Response, Session
-from typing import Optional, Any
+from __future__ import annotations
+
+from LSP.plugin import Response
+from LSP.plugin import Session
+from typing import Any
+from typing import Optional
 
 
 def handle_input_box(session: Session, params: Any, request_id: Any) -> None:

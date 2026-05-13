@@ -1,12 +1,16 @@
-from .. core.constants import SESSION_NAME
-from LSP.plugin.core.protocol import Location
-from LSP.plugin.core.registry import windows
-from LSP.plugin.core.sessions import Session
-from LSP.plugin.core.typing import Any, Dict, Optional
-from LSP.plugin.core.url import parse_uri
-from LSP.plugin.core.views import to_encoded_filename
+from __future__ import annotations
 
+from ..core.constants import SESSION_NAME
+from LSP.plugin import parse_uri
+from LSP.plugin import Session
+from LSP.plugin.core.registry import windows
+from LSP.plugin.core.views import to_encoded_filename
+from LSP.protocol import Location
+from typing import Any
+from typing import Dict
+from typing import Optional
 import sublime
+
 
 def handle_error(command: str, error: Dict[str, Any]) -> None:
     msg = "command '{}' failed. Reason: {}".format(command, str(error))

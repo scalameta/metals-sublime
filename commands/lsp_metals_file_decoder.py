@@ -1,11 +1,13 @@
-from . lsp_metals_text_command import LspMetalsTextCommand
-from . utils import handle_error
-from LSP.plugin.core.protocol import Error
-from LSP.plugin.core.typing import Any
-from LSP.plugin.core.url import filename_to_uri  # TODO: deprecated in a future version
+from __future__ import annotations
 
+from .lsp_metals_text_command import LspMetalsTextCommand
+from .utils import handle_error
+from LSP.plugin.core.protocol import Error
+from LSP.plugin.core.url import filename_to_uri  # TODO: deprecated in a future version
+from typing import Any
 import os
 import sublime
+
 
 class LspMetalsFileDecoderCommand(LspMetalsTextCommand):
 

@@ -1,25 +1,30 @@
-from . decorations import handle_decorations
-from . handle_execute_client import handle_execute_client
-from . handle_input_box import handle_input_box
-from . status import handle_status
-from .. commands.utils import handle_error
-from .. commands.lsp_metals_text_command import LspMetalsTextCommand
+from __future__ import annotations
+
+from ..commands.lsp_metals_text_command import LspMetalsTextCommand
+from ..commands.utils import handle_error
+from .decorations import handle_decorations
+from .handle_execute_client import handle_execute_client
+from .handle_input_box import handle_input_box
+from .status import handle_status
 from distutils.version import LooseVersion
 from LSP.plugin import AbstractPlugin
 from LSP.plugin import ClientConfig
 from LSP.plugin import Request as LspRequest
 from LSP.plugin import WorkspaceFolder
-from LSP.plugin.core.protocol import DocumentUri, Error, Position
-from LSP.plugin.core.typing import Callable, Optional, Any, List
+from LSP.plugin.core.protocol import Error
 from LSP.plugin.core.views import first_selection_region
-from LSP.plugin.core.views import Point
 from LSP.plugin.core.views import point_to_offset
 from LSP.plugin.core.views import region_to_range
-from urllib.request import urlopen, Request
+from LSP.protocol import DocumentUri
+from typing import Any
+from typing import Callable
+from typing import List
+from typing import Optional
+from urllib.request import Request
+from urllib.request import urlopen
 import json
-
-import sublime
 import os
+import sublime
 
 _COURSIER_PATH = os.path.join(os.path.dirname(__file__), '..', 'coursier')
 _LATEST_STABLE = "latest-stable"

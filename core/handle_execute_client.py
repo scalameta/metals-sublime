@@ -1,5 +1,7 @@
+from __future__ import annotations
+
+from ..commands.utils import open_location
 from collections import OrderedDict
-from .. commands.utils import open_location
 from LSP.plugin import Session
 from typing import Any
 import json

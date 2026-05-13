@@ -1,7 +1,10 @@
-from . utils import get_session, handle_error
-from LSP.plugin.core.protocol import Error
-from typing import List, Any
+from __future__ import annotations
 
+from .utils import get_session
+from .utils import handle_error
+from LSP.plugin.core.protocol import Error
+from typing import Any
+from typing import List
 import sublime_plugin
 
 

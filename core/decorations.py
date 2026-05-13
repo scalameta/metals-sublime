@@ -1,9 +1,19 @@
-from .. commands.lsp_metals_text_command import LspMetalsTextCommand
-from functools import reduce, partial
-from LSP.plugin import css, Session
-from LSP.plugin.core.typing import Any, List, Dict, Optional, Union
-from LSP.plugin.core.views import range_to_region, FORMAT_MARKED_STRING, FORMAT_MARKUP_CONTENT, minihtml
+from __future__ import annotations
 
+from ..commands.lsp_metals_text_command import LspMetalsTextCommand
+from functools import partial
+from functools import reduce
+from LSP.plugin import css
+from LSP.plugin import Session
+from LSP.plugin.core.views import FORMAT_MARKED_STRING
+from LSP.plugin.core.views import FORMAT_MARKUP_CONTENT
+from LSP.plugin.core.views import minihtml
+from LSP.plugin.core.views import range_to_region
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Optional
+from typing import Union
 import mdpopups
 import sublime
 import sublime_plugin

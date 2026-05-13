@@ -1,7 +1,10 @@
-from . lsp_metals_execute_command import LspMetalsExecuteCommand
-from typing import List, Any
+from __future__ import annotations
 
+from .lsp_metals_execute_command import LspMetalsExecuteCommand
+from typing import Any
+from typing import List
 import os
+
 
 class LspMetalsShowBuildTargetInfoCommand(LspMetalsExecuteCommand):
 

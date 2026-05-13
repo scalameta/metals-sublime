@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from LSP.plugin import Session
 from typing import Any
 

@@ -1,13 +1,17 @@
-from . lsp_metals_text_command import LspMetalsTextCommand
-from . utils import handle_error
-from LSP.plugin.core.protocol import Request, Location
-from LSP.plugin.core.sessions import Session
-from LSP.plugin.core.typing import Any, List, Union, Dict
-from LSP.plugin.locationpicker import LocationPicker
-import weakref
+from __future__ import annotations
 
+from .lsp_metals_text_command import LspMetalsTextCommand
+from .utils import handle_error
+from LSP.plugin import Request
+from LSP.plugin.locationpicker import LocationPicker
+from LSP.protocol import Location
+from typing import Any
+from typing import List
+from typing import Union
 import sublime
 import sublime_plugin
+import weakref
+
 
 class IncludeInput(sublime_plugin.TextInputHandler):
     def validate(self, txt: str) -> bool:
