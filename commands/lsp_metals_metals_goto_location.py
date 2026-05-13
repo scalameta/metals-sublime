@@ -1,5 +1,5 @@
 from . utils import open_location
-from LSP.plugin.core.types import List, Any
+from typing import List, Any
 
 import sublime_plugin
 

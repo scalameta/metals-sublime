@@ -1,5 +1,5 @@
 from LSP.plugin import Session
-from LSP.plugin.core.types import Any
+from typing import Any
 
 
 def handle_status(session: Session, params: Any) -> None:

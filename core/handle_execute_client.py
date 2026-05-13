@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from .. commands.utils import open_location
 from LSP.plugin import Session
-from LSP.plugin.core.types import Any
+from typing import Any
 import json
 import mdpopups
 
