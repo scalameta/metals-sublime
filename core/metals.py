@@ -5,7 +5,6 @@ from ..commands.utils import handle_error
 from .handle_execute_client import handle_execute_client
 from .handle_input_box import handle_input_box
 from .status import handle_status
-from distutils.version import LooseVersion
 from LSP.plugin import AbstractPlugin
 from LSP.plugin import ClientConfig
 from LSP.plugin import Error
@@ -21,16 +20,19 @@ from typing import Any
 from typing import Callable
 from typing import List
 from typing import Optional
+from typing import Tuple
 from urllib.request import Request
 from urllib.request import urlopen
 import json
 import os
+import re
 import sublime
 
 _COURSIER_PATH = os.path.join(os.path.dirname(__file__), '..', 'coursier')
 _LATEST_STABLE = "latest-stable"
 _LATEST_SNAPSHOT = "latest-snapshot"
 _LATEST_STABLE_ARTIFACT = "latest.stable"
+_SCALA_213_MINIMUM_VERSION = (0, 11, 2)
 
 
 class Metals(AbstractPlugin):
@@ -160,7 +162,7 @@ def get_java_path(settings: sublime.Settings) -> str:
 
 def create_launch_command(java_path: str, artifact_version: str, server_properties: List[str]) -> List[str]:
     binary_version = "2.12"
-    if artifact_version == _LATEST_STABLE_ARTIFACT or LooseVersion(artifact_version) > LooseVersion("0.11.2"):
+    if artifact_version == _LATEST_STABLE_ARTIFACT or _uses_scala_213_artifact(artifact_version):
         binary_version = "2.13"
 
     return [java_path] + server_properties + [
@@ -183,3 +185,23 @@ def prepare_server_properties(properties: List[str]) -> List[str]:
     stripped = map(lambda p: p.strip(), properties)
     none_empty = list(filter(None, stripped))
     return none_empty
+
+
+def _uses_scala_213_artifact(artifact_version: str) -> bool:
+    version = _numeric_version_prefix(artifact_version)
+    if not version:
+        return False
+
+    padded_length = max(len(version), len(_SCALA_213_MINIMUM_VERSION))
+    padded_version = version + (0,) * (padded_length - len(version))
+    padded_minimum = _SCALA_213_MINIMUM_VERSION + (0,) * (padded_length - len(_SCALA_213_MINIMUM_VERSION))
+    return padded_version > padded_minimum
+
+
+def _numeric_version_prefix(artifact_version: str) -> Tuple[int, ...]:
+    # Metals versions can include tags or prerelease suffixes; only the leading
+    # numeric release determines the Scala binary version.
+    match = re.match(r"\d+(?:\.\d+)*", artifact_version.strip())
+    if match is None:
+        return ()
+    return tuple(int(part) for part in match.group(0).split("."))
