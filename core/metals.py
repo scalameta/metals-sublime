@@ -12,10 +12,12 @@ from LSP.plugin import ClientConfig
 from LSP.plugin import Request as LspRequest
 from LSP.plugin import WorkspaceFolder
 from LSP.plugin.core.protocol import Error
+from LSP.plugin.core.protocol import Point
 from LSP.plugin.core.views import first_selection_region
 from LSP.plugin.core.views import point_to_offset
 from LSP.plugin.core.views import region_to_range
 from LSP.protocol import DocumentUri
+from LSP.protocol import Position
 from typing import Any
 from typing import Callable
 from typing import List
@@ -86,7 +88,7 @@ class Metals(AbstractPlugin):
             view = request.view
             region = first_selection_region(view)
             if region is not None:
-                position = request.params['position']  # type: Position
+                position: Position = request.params['position']
                 point = point_to_offset(Point.from_lsp(position), view)
                 if region.contains(point):
                     request.params['range'] = region_to_range(view, region)

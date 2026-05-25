@@ -1,12 +1,10 @@
 from __future__ import annotations
 
-from typing import Any
-
-from LSP.plugin.core.protocol import Error
-import sublime
-
 from .lsp_metals_text_command import LspMetalsTextCommand
 from .utils import handle_error
+from LSP.plugin.core.protocol import Error
+from typing import Any
+import sublime
 
 
 class LspMetalsAnalyzeStacktraceCommand(LspMetalsTextCommand):
