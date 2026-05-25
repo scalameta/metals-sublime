@@ -25,7 +25,7 @@
   - [Show document symbols](#show-document-symbols)
   - [Formatting on save](#formatting-on-save)
   - [Organize imports on save](#organize-imports-on-save)
-  - [Decoration protocol](#decoration-protocol)
+  - [Inlay Hints](#inlay-hints)
   - [Status Bar](#status-bar)
   - [Troubleshooting](#troubleshooting)
 
@@ -157,19 +157,21 @@ If you'd like to have `LSP-metals` organize your imports on document save then m
 ...
 ```
 
-### Decoration protocol
+### Inlay Hints
 
-This plugin implements the [Decoration protocol](https://scalameta.org/metals/docs/editors/decoration-protocol.html) (only for ST4) which allows showing worksheet evaluations (instead of comments), as well as inferred types and other info as Sublime Phantom.
+Worksheet evaluations will be displayed as inlay hints.
 
-To enable this feature enable the following `LSP-metals` settings:
+If you'd like to enable other inlay hints, update the following `LSP-metals` settings:
 
 ```
 "settings": {
   "metals": {
     ...
-    "showInferredType": true,
-    "showImplicitArguments": true,
-    "showImplicitConversionsAndClasses": true
+    "inlayHints.typeParameters.enable": true,
+    "inlayHints.implicitConversions.enable": true,
+    "inlayHints.implicitArguments.enable": true,
+    "inlayHints.inferredTypes.enable": true,
+    "inlayHints.hintsInPatternMatch.enable": true,
   }
 }
 

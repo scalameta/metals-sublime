@@ -7,7 +7,6 @@ import sublime
 __all__ = [
     'ActiveViewListener',
     'LspMetalsAnalyzeStacktraceCommand',
-    'LspMetalsClearPhantomsCommand',
     'LspMetalsCopyWorksheetCommand',
     'LspMetalsExecuteCommand',
     'LspMetalsFileDecoderCommand',
@@ -19,7 +18,6 @@ __all__ = [
     'LspMetalsSendPositionCommand',
     'LspMetalsShowBuildTargetInfoCommand',
     'LspMetalsTextCommand',
-    'WorksheetListener',
 ]
 
 package_name = __package__
@@ -46,8 +44,6 @@ else:
     from .commands.lsp_metals_run_scalafix import LspMetalsRunScalafixCommand
     from .commands.lsp_metals_show_build_target_info import LspMetalsShowBuildTargetInfoCommand
     from .commands.lsp_metals_text_command import LspMetalsTextCommand
-    from .core.decorations import LspMetalsClearPhantomsCommand
-    from .core.decorations import WorksheetListener
     from .core.metals import Metals
 
     def plugin_loaded() -> None:

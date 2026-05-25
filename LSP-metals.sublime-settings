@@ -22,29 +22,26 @@
 
   // initialization options
   "initialization_options": {
-    "didFocusProvider": true,
-    "executeClientCommandProvider": true,
-    "statusBarProvider": "on",
-    "inputBoxProvider": true,
-    // When enabled, shows worksheet evaluations as Sublime.Phantom instead of code comments.
-    "decorationProvider": true,
-    // When enabled, inferred types and implicits are shown as as Sublime.Phantom.
-    "inlineDecorationProvider": true,
     "commandInHtmlFormat": "sublime",
+    "didFocusProvider": true,
     "doctorProvider": "json",
+    "doctorVisibilityProvider": false,
+    "executeClientCommandProvider": true,
+    "inputBoxProvider": true,
     "isHttpEnabled": false,
-    "doctorVisibilityProvider": false
+    "statusBarProvider": "on",
   },
 
   "settings": {
-    "metals": {
-      "superMethodLensesEnabled": true,
-      // When enabled, each method and variable that can have inferred types has them displayed.
-      "showInferredType": false,
-      // When enabled, each method that has implicit arguments has them displayed.
-      "showImplicitArguments": false,
-      // When enabled, each place where an implicit method or class is used has it displayed.
-      "showImplicitConversionsAndClasses": false
-    }
+    "metals.superMethodLensesEnabled": true,
+    "metals.inlayHints.byNameParameters.enable": false,
+    "metals.inlayHints.closingLabels.enable": false,
+    "metals.inlayHints.hintsInPatternMatch.enable": false,
+    "metals.inlayHints.hintsXRayMode.enable": false,
+    "metals.inlayHints.implicitArguments.enable": false,
+    "metals.inlayHints.implicitConversions.enable": false,
+    "metals.inlayHints.inferredTypes.enable": false,
+    "metals.inlayHints.namedParameters.enable": false,
+    "metals.inlayHints.typeParameters.enable": false,
   }
 }
