@@ -9,9 +9,9 @@ from .status import handle_status
 from distutils.version import LooseVersion
 from LSP.plugin import AbstractPlugin
 from LSP.plugin import ClientConfig
+from LSP.plugin import Error
 from LSP.plugin import Request as LspRequest
 from LSP.plugin import WorkspaceFolder
-from LSP.plugin.core.protocol import Error
 from LSP.plugin.core.protocol import Point
 from LSP.plugin.core.views import first_selection_region
 from LSP.plugin.core.views import point_to_offset

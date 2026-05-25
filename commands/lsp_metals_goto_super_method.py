@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from .lsp_metals_text_command import LspMetalsTextCommand
 from .utils import handle_error
-from LSP.plugin.core.protocol import Error
+from LSP.plugin import Error
 from LSP.plugin.core.views import first_selection_region
 from LSP.plugin.core.views import text_document_position_params
 from typing import Any
