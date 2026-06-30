@@ -3,6 +3,7 @@ from __future__ import annotations
 from .lsp_metals_text_command import LspMetalsTextCommand
 from .utils import handle_error
 from LSP.plugin import Error
+from LSP.protocol import ExecuteCommandParams
 from typing import Any
 import sublime
 
@@ -17,7 +18,7 @@ class LspMetalsAnalyzeStacktraceCommand(LspMetalsTextCommand):
     def _send_request(self, text: str) -> None:
         session = self.session_by_name(self.session_name)
         if session:
-            params = {
+            params: ExecuteCommandParams = {
                 "command": self._command_name,
                 "arguments": [text]
             }
