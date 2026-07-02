@@ -4,6 +4,7 @@ from .lsp_metals_text_command import LspMetalsTextCommand
 from .utils import handle_error
 from LSP.plugin import Error
 from LSP.plugin import filename_to_uri
+from LSP.protocol import ExecuteCommandParams
 from typing import Any
 import sublime
 
@@ -13,19 +14,19 @@ class LspMetalsCopyWorksheetCommand(LspMetalsTextCommand):
     _command_name = 'copy-worksheet-output'
 
     def is_enabled(self) -> bool:
-        if super().is_enabled(None, None):
-            return self.view.file_name().endswith('.worksheet.sc')
+        if super().is_enabled(None, None) and (file_name := self.view.file_name()):
+            return file_name.endswith('.worksheet.sc')
         else:
             return False
 
     def run(self, edit: sublime.Edit) -> None:
         file_name = self.view.file_name()
         session = self.session_by_name(self.session_name)
-        if self.view.is_dirty():
+        if self.view.is_dirty() or not file_name:
             sublime.message_dialog('Please save your worksheet before using this command.')
         elif session:
             uri = filename_to_uri(file_name)
-            params = {
+            params: ExecuteCommandParams = {
                 "command": self._command_name,
                 "arguments": [uri]
             }

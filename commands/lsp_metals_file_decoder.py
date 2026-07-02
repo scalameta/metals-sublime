@@ -4,6 +4,7 @@ from .lsp_metals_text_command import LspMetalsTextCommand
 from .utils import handle_error
 from LSP.plugin import Error
 from LSP.plugin import filename_to_uri
+from LSP.protocol import ExecuteCommandParams
 from typing import Any
 import os
 import sublime
@@ -27,22 +28,25 @@ class LspMetalsFileDecoderCommand(LspMetalsTextCommand):
     _build_target = 'metals-buildtarget'
 
     def is_enabled(self, decoding_type: str, file_path: str = '') -> bool:
-        if super().is_enabled(None, None):
-            extension = os.path.splitext(self.view.file_name())[1][1:]
+        if super().is_enabled(None, None) and (file_name := self.view.file_name()):
+            extension = os.path.splitext(file_name)[1][1:]
             accepted_extentions = self._decoders.get(decoding_type)
             return decoding_type == self._build_target or (accepted_extentions is not None and extension in accepted_extentions)
         else:
             return False
 
     def run(self, edit: sublime.Edit, decoding_type: str, file_path: str = '') -> None:
+        file_name = self.view.file_name()
+        if not file_name:
+            return
         path = file_path
         if not path:
-            path = filename_to_uri(self.view.file_name())
+            path = filename_to_uri(file_name)
 
         uri = 'metalsDecode:' + path + '.' + decoding_type
         session = self.session_by_name(self.session_name)
         if session:
-            params = {
+            params: ExecuteCommandParams = {
                 "command": self._command,
                 "arguments": [uri]
             }
@@ -52,6 +56,8 @@ class LspMetalsFileDecoderCommand(LspMetalsTextCommand):
                     handle_error(self._command, response)
                 elif response and 'value' in response:
                     window = self.view.window()
+                    if not window:
+                        return
                     view = window.new_file()
                     view.set_scratch(True)
                     view.set_name(os.path.basename(response['requestedUri']))
