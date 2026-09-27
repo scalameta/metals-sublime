@@ -3,8 +3,8 @@ from __future__ import annotations
 from .lsp_metals_text_command import LspMetalsTextCommand
 from .utils import handle_error
 from LSP.plugin import Error
+from LSP.plugin import LocationPicker
 from LSP.plugin import Request
-from LSP.plugin.locationpicker import LocationPicker
 from LSP.protocol import Location
 from typing import Any
 from typing import List

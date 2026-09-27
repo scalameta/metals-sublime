@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from .lsp_metals_text_command import LspMetalsTextCommand
-from LSP.plugin.core.views import first_selection_region
-from LSP.plugin.core.views import text_document_position_params
+from LSP.plugin import first_selection_region
+from LSP.plugin import text_document_position_params
 import sublime
 
 
