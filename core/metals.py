@@ -8,12 +8,11 @@ from .status import handle_status
 from LSP.plugin import AbstractPlugin
 from LSP.plugin import ClientConfig
 from LSP.plugin import Error
+from LSP.plugin import first_selection_region
+from LSP.plugin import position_to_offset
+from LSP.plugin import region_to_range
 from LSP.plugin import Request as LspRequest
 from LSP.plugin import WorkspaceFolder
-from LSP.plugin.core.protocol import Point
-from LSP.plugin.core.views import first_selection_region
-from LSP.plugin.core.views import point_to_offset
-from LSP.plugin.core.views import region_to_range
 from LSP.protocol import DocumentUri
 from LSP.protocol import Position
 from typing import Any
@@ -90,7 +89,7 @@ class Metals(AbstractPlugin):
             region = first_selection_region(view)
             if region is not None:
                 position: Position = request.params['position']
-                point = point_to_offset(Point.from_lsp(position), view)
+                point = position_to_offset(view, position)
                 if region.contains(point):
                     request.params['range'] = region_to_range(view, region)
 

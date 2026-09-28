@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from ..core.constants import SESSION_NAME
-from LSP.plugin.execute_command import LspExecuteCommand  # TODO: bring to public API
+from LSP.plugin import LspExecuteCommand
 
 
 class LspMetalsExecuteCommand(LspExecuteCommand):
