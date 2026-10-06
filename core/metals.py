@@ -59,19 +59,14 @@ class Metals(AbstractPlugin):
         server_version = plugin_settings.get('server_version', _LATEST_STABLE)
 
         if server_version == _LATEST_SNAPSHOT:
-            try:
-                httprequest = Request(
-                    "https://scalameta.org/metals/latests.json",
-                    headers={"Accept": "application/json"},
-                    method="GET"
-                )
-                httpresponse = urlopen(httprequest)
-                body = json.loads(httpresponse.read().decode())
-                server_version = body.get("snapshot")
-            except:
+            server_version = fetch_latest_version("snapshot")
+            if not server_version:
                 return "Couldn't get latest version number from scalameta website, please set the 'server_version'"
         elif not server_version or server_version == _LATEST_STABLE:
-            server_version = _LATEST_STABLE_ARTIFACT
+            # Coursier's `latest.stable` also matches milestone releases (e.g. 2.0.0-M19) published to Maven
+            # Central, so ask the Metals website for the actual latest release. Fall back to Coursier's resolution
+            # when offline so that a previously cached server can still be launched.
+            server_version = fetch_latest_version("release") or _LATEST_STABLE_ARTIFACT
 
         properties = prepare_server_properties(plugin_settings.get("server_properties"))
         command = create_launch_command(java_path, server_version, properties)
@@ -147,6 +142,22 @@ class Metals(AbstractPlugin):
         if not session:
             return
         handle_input_box(session, params, request_id)
+
+
+def fetch_latest_version(kind: str) -> Optional[str]:
+    try:
+        httprequest = Request(
+            "https://scalameta.org/metals/latests.json",
+            # The website rejects the default "Python-urllib" user agent with 403.
+            headers={"Accept": "application/json", "User-Agent": "LSP-metals"},
+            method="GET"
+        )
+        httpresponse = urlopen(httprequest, timeout=10)
+        body = json.loads(httpresponse.read().decode())
+        version = body.get(kind)
+        return version if isinstance(version, str) and version else None
+    except Exception:
+        return None
 
 
 def get_java_path(settings: sublime.Settings) -> str:
