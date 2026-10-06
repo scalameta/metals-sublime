@@ -1,25 +1,27 @@
 from __future__ import annotations
 
-from ..commands.lsp_metals_text_command import LspMetalsTextCommand
 from ..commands.utils import handle_error
 from .handle_execute_client import handle_execute_client
 from .handle_input_box import handle_input_box
 from .status import handle_status
-from LSP.plugin import AbstractPlugin
-from LSP.plugin import ClientConfig
+from LSP.plugin import ClientRequest
 from LSP.plugin import Error
 from LSP.plugin import first_selection_region
+from LSP.plugin import LspPlugin
+from LSP.plugin import notification_handler
+from LSP.plugin import OnPreStartContext
+from LSP.plugin import PluginStartError
 from LSP.plugin import position_to_offset
+from LSP.plugin import Promise
 from LSP.plugin import region_to_range
-from LSP.plugin import Request as LspRequest
-from LSP.plugin import WorkspaceFolder
+from LSP.plugin import request_handler
+from LSP.plugin import uri_handler
 from LSP.protocol import DocumentUri
-from LSP.protocol import Position
+from LSP.protocol import ExecuteCommandParams
+from pathlib import Path
 from typing import Any
-from typing import Callable
-from typing import List
-from typing import Optional
-from typing import Tuple
+from typing import final
+from typing_extensions import override
 from urllib.request import Request
 from urllib.request import urlopen
 import json
@@ -27,34 +29,26 @@ import os
 import re
 import sublime
 
-_COURSIER_PATH = os.path.join(os.path.dirname(__file__), '..', 'coursier')
+_COURSIER_PATH = str(Path(__file__).parent.parent / 'coursier')
 _LATEST_STABLE = "latest-stable"
 _LATEST_SNAPSHOT = "latest-snapshot"
 _LATEST_STABLE_ARTIFACT = "latest.stable"
 _SCALA_213_MINIMUM_VERSION = (0, 11, 2)
 
 
-class Metals(AbstractPlugin):
+@final
+class Metals(LspPlugin):
 
     @classmethod
-    def name(cls) -> str:
-        return LspMetalsTextCommand.session_name
+    @override
+    def on_pre_start_async(cls, context: OnPreStartContext) -> None:
+        if not context.workspace_folders:
+            raise PluginStartError("No workspace detected. Try opening your project at the workspace root.")
 
-    @classmethod
-    def can_start(
-        cls,
-        window: sublime.Window,
-        initiating_view: sublime.View,
-        workspace_folders: List[WorkspaceFolder],
-        configuration: ClientConfig
-    ) -> Optional[str]:
-        if not workspace_folders:
-            return "No workspace detected. Try opening your project at the workspace root."
-
-        plugin_settings = sublime.load_settings("LSP-metals.sublime-settings")
+        plugin_settings = context.configuration.root_settings
         java_path = get_java_path(plugin_settings)
         if not java_path :
-            return "Please install java or set the 'java_home' setting"
+            raise PluginStartError("Please install java or set the 'java_home' setting")
 
         server_version = plugin_settings.get('server_version', _LATEST_STABLE)
 
@@ -70,97 +64,99 @@ class Metals(AbstractPlugin):
                 body = json.loads(httpresponse.read().decode())
                 server_version = body.get("snapshot")
             except:
-                return "Couldn't get latest version number from scalameta website, please set the 'server_version'"
+                raise PluginStartError(
+                    "Couldn't get latest version number from scalameta website, please set the 'server_version'")
         elif not server_version or server_version == _LATEST_STABLE:
             server_version = _LATEST_STABLE_ARTIFACT
 
-        properties = prepare_server_properties(plugin_settings.get("server_properties"))
-        command = create_launch_command(java_path, server_version, properties)
-        configuration.command = command
-        return None
+        properties = prepare_server_properties(plugin_settings.get("server_properties") or [])
+        context.configuration.command = create_launch_command(java_path, server_version, properties)
 
-    def on_pre_send_request_async(self, request_id: int, request: LspRequest) -> None:
-        if request.method == 'textDocument/hover' and request.view:
+    @override
+    def on_pre_send_request_async(self, request: ClientRequest, view: sublime.View | None) -> None:
+        if request['method'] == 'textDocument/hover' and view:
             session = self.weaksession()
             if not session:
                 return
             if not session.get_capability('experimental.rangeHoverProvider'):
                 return
-            view = request.view
             region = first_selection_region(view)
             if region is not None:
-                position: Position = request.params['position']
-                point = position_to_offset(view, position)
+                params = request['params']
+                point = position_to_offset(view, params['position'])
                 if region.contains(point):
-                    request.params['range'] = region_to_range(view, region)
+                    params['range'] = region_to_range(view, region)  # pyright: ignore[reportGeneralTypeIssues]
 
-    def on_open_uri_async(self, uri: DocumentUri, callback: Callable[[str, str, str], None]) -> bool:
-        if not uri.startswith("jar:"):
-            return False
-
+    @uri_handler('jar')
+    def on_open_jar_uri(self, uri: DocumentUri, flags: sublime.NewFileFlags) -> Promise[sublime.Sheet | None]:
         session = self.weaksession()
         if not session:
-            return False
+            return Promise.resolve(None)
 
-        params = { "command": "file-decode", "arguments": [uri] }
+        params: ExecuteCommandParams = {"command": "file-decode", "arguments": [uri]}
 
-        def handle_response(response: Any) -> None:
+        def handle_response(response: Any) -> Promise[sublime.Sheet | None]:
             if isinstance(response, Error) or 'error' in response:
                 handle_error("file-decode", response)
-            if response and 'value' in response:
+                return Promise.resolve(None)
 
-                title = response['requestedUri']
-                uri_parts = str(response['requestedUri']).split("!")
+            if response and 'value' in response:
+                session = self.weaksession()
+                if not session:
+                    return Promise.resolve(None)
+
+                title = str(response['requestedUri'])
+                uri_parts = title.split("!")
                 if len(uri_parts) == 2:
                     jar_source, path_to_file = uri_parts
-                    title = f"{os.path.basename(jar_source)}!{path_to_file}"
+                    title = f"{Path(jar_source).name}!{path_to_file}"
 
                 syntax = "Packages/Scala/Scala.sublime-syntax"
                 if title.endswith('.java'):
                     syntax = "Packages/Java/Java.sublime-syntax"
 
-                callback(
-                    title,
-                    response['value'],
-                    syntax
-                )
+                return session.open_scratch_buffer(title, response['value'], syntax, flags) \
+                    .then(lambda view: view.sheet())
+            return Promise.resolve(None)
 
-        session.execute_command(params, progress=True).then(handle_response)
-        return True
+        return session.execute_command(params, progress=True).then(handle_response)
 
     # notification and request handlers
 
-    def m_metals_status(self, params: Any) -> None:
+    @notification_handler('metals/status')
+    def on_metals_status(self, params: Any) -> None:
         session = self.weaksession()
         if not session:
             return
         handle_status(session, params)
 
-    def m_metals_executeClientCommand(self, params: Any) -> None:
+    @notification_handler('metals/executeClientCommand')
+    def on_metals_execute_client_command(self, params: Any) -> None:
         session = self.weaksession()
         if not session:
             return
 
         handle_execute_client(session, params)
 
-    def m_metals_inputBox(self, params: Any, request_id: Any) -> None:
+    @request_handler('metals/inputBox')
+    def on_metals_input_box(self, params: Any) -> Promise[Any]:
         session = self.weaksession()
         if not session:
-            return
-        handle_input_box(session, params, request_id)
+            return Promise.resolve({'cancelled': True})
+        return handle_input_box(session, params)
 
 
-def get_java_path(settings: sublime.Settings) -> str:
+def get_java_path(settings: dict[str, Any]) -> str:
     java_home = settings.get("java_home")
     if isinstance(java_home, str) and java_home:
-        return os.path.join(java_home, "bin", "java")
+        return str(Path(java_home, "bin", "java"))
     java_home = os.environ.get('JAVA_HOME')
     if java_home:
-        return os.path.join(java_home, "bin", "java")
+        return str(Path(java_home, "bin", "java"))
     return "java"
 
 
-def create_launch_command(java_path: str, artifact_version: str, server_properties: List[str]) -> List[str]:
+def create_launch_command(java_path: str, artifact_version: str, server_properties: list[str]) -> list[str]:
     binary_version = "2.12"
     if artifact_version == _LATEST_STABLE_ARTIFACT or _uses_scala_213_artifact(artifact_version):
         binary_version = "2.13"
@@ -181,7 +177,7 @@ def create_launch_command(java_path: str, artifact_version: str, server_properti
     ]
 
 
-def prepare_server_properties(properties: List[str]) -> List[str]:
+def prepare_server_properties(properties: list[str]) -> list[str]:
     stripped = map(lambda p: p.strip(), properties)
     none_empty = list(filter(None, stripped))
     return none_empty
@@ -198,7 +194,7 @@ def _uses_scala_213_artifact(artifact_version: str) -> bool:
     return padded_version > padded_minimum
 
 
-def _numeric_version_prefix(artifact_version: str) -> Tuple[int, ...]:
+def _numeric_version_prefix(artifact_version: str) -> tuple[int, ...]:
     # Metals versions can include tags or prerelease suffixes; only the leading
     # numeric release determines the Scala binary version.
     match = re.match(r"\d+(?:\.\d+)*", artifact_version.strip())

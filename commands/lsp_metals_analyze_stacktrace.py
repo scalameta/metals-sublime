@@ -1,14 +1,14 @@
 from __future__ import annotations
 
-from .lsp_metals_text_command import LspMetalsTextCommand
 from .utils import handle_error
 from LSP.plugin import Error
+from LSP.plugin import LspTextCommand
 from LSP.protocol import ExecuteCommandParams
 from typing import Any
 import sublime
 
 
-class LspMetalsAnalyzeStacktraceCommand(LspMetalsTextCommand):
+class LspMetalsAnalyzeStacktraceCommand(LspTextCommand):
 
     _command_name = 'analyze-stacktrace'
 

@@ -9,16 +9,14 @@ from LSP.plugin.core.views import to_encoded_filename
 from LSP.protocol import Location
 from LSP.protocol import Position
 from typing import Any
-from typing import Dict
-from typing import Optional
 import sublime
 
 
-def handle_error(command: str, error: Dict[str, Any] | Error) -> None:
+def handle_error(command: str, error: dict[str, Any] | Error) -> None:
     msg = "command '{}' failed. Reason: {}".format(command, str(error))
     sublime.error_message(msg)
 
-def get_session(window: sublime.Window) -> Optional[Session]:
+def get_session(window: sublime.Window) -> Session | None:
     wm = windows.lookup(window)
     metals_session = None
     if wm is not None:

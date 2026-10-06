@@ -1,19 +1,19 @@
 from __future__ import annotations
 
-from LSP.plugin import Response
+from LSP.plugin import Promise
 from LSP.plugin import Session
 from typing import Any
-from typing import Optional
 
 
-def handle_input_box(session: Session, params: Any, request_id: Any) -> None:
+def handle_input_box(session: Session, params: Any) -> Promise[Any]:
     """Handle the metals/inputBox request."""
     if not isinstance(params, dict):
-        return
+        return Promise.resolve({'cancelled': True})
 
-    def send_response(input: Optional[str]) -> None:
-        p = {'value': input, 'cancelled': False} if input else {'cancelled': True}
-        session.send_response(Response(request_id, p))
+    promise, resolve = Promise.packaged_task()
+
+    def send_response(input: str | None) -> None:
+        resolve({'value': input, 'cancelled': False} if input else {'cancelled': True})
 
     session.window.show_input_panel(
         params.get('prompt', ''),
@@ -22,3 +22,4 @@ def handle_input_box(session: Session, params: Any, request_id: Any) -> None:
         None,
         lambda: send_response(None)
     )
+    return promise

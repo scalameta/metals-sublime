@@ -1,16 +1,16 @@
 from __future__ import annotations
 
-from .lsp_metals_text_command import LspMetalsTextCommand
 from .utils import handle_error
 from LSP.plugin import Error
 from LSP.plugin import filename_to_uri
+from LSP.plugin import LspTextCommand
 from LSP.protocol import ExecuteCommandParams
+from pathlib import Path
 from typing import Any
-import os
 import sublime
 
 
-class LspMetalsFileDecoderCommand(LspMetalsTextCommand):
+class LspMetalsFileDecoderCommand(LspTextCommand):
 
     _command = 'file-decode'
     _jvm_extentions = {'java', 'scala', 'class'}
@@ -29,7 +29,7 @@ class LspMetalsFileDecoderCommand(LspMetalsTextCommand):
 
     def is_enabled(self, decoding_type: str, file_path: str = '') -> bool:
         if super().is_enabled(None, None) and (file_name := self.view.file_name()):
-            extension = os.path.splitext(file_name)[1][1:]
+            extension = Path(file_name).suffix[1:]
             accepted_extentions = self._decoders.get(decoding_type)
             return decoding_type == self._build_target or (accepted_extentions is not None and extension in accepted_extentions)
         else:
@@ -60,7 +60,7 @@ class LspMetalsFileDecoderCommand(LspMetalsTextCommand):
                         return
                     view = window.new_file()
                     view.set_scratch(True)
-                    view.set_name(os.path.basename(response['requestedUri']))
+                    view.set_name(Path(str(response['requestedUri'])).name)
                     view.run_command("append", {"characters": response['value']})
                     view.set_read_only(True)
 
