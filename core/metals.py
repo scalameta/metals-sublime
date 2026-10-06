@@ -62,7 +62,8 @@ class Metals(AbstractPlugin):
             try:
                 httprequest = Request(
                     "https://scalameta.org/metals/latests.json",
-                    headers={"Accept": "application/json"},
+                    # The website rejects the default "Python-urllib" user agent with 403.
+                    headers={"Accept": "application/json", "User-Agent": "LSP-metals"},
                     method="GET"
                 )
                 httpresponse = urlopen(httprequest)
