@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from .lsp_metals_text_command import LspMetalsTextCommand
+from LSP.plugin import LspTextCommand
 from LSP.plugin import Notification
 import functools
 import sublime
 import sublime_plugin
 
 
-class LspMetalsFocusViewCommand(LspMetalsTextCommand):
+class LspMetalsFocusViewCommand(LspTextCommand):
 
     def run(self, edit: sublime.Edit) -> None:
         fname = self.view.file_name()

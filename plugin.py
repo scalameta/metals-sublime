@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from LSP.plugin import register_plugin
-from LSP.plugin import unregister_plugin
 import sublime
 
 __all__ = [
@@ -17,7 +15,6 @@ __all__ = [
     'LspMetalsRunScalafixCommand',
     'LspMetalsSendPositionCommand',
     'LspMetalsShowBuildTargetInfoCommand',
-    'LspMetalsTextCommand',
 ]
 
 package_name = __package__
@@ -43,11 +40,10 @@ else:
     from .commands.lsp_metals_metals_goto_location import LspMetalsMetalsGotoLocationCommand
     from .commands.lsp_metals_run_scalafix import LspMetalsRunScalafixCommand
     from .commands.lsp_metals_show_build_target_info import LspMetalsShowBuildTargetInfoCommand
-    from .commands.lsp_metals_text_command import LspMetalsTextCommand
     from .core.metals import Metals
 
     def plugin_loaded() -> None:
-        register_plugin(Metals)
+        Metals.register()
 
     def plugin_unloaded() -> None:
-        unregister_plugin(Metals)
+        Metals.unregister()

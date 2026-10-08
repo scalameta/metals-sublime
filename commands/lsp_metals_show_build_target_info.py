@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from .lsp_metals_execute_command import LspMetalsExecuteCommand
 from typing import Any
-from typing import List
-import os
 
 
 class LspMetalsShowBuildTargetInfoCommand(LspMetalsExecuteCommand):
@@ -15,9 +13,9 @@ class LspMetalsShowBuildTargetInfoCommand(LspMetalsExecuteCommand):
                 lambda i: self._on_select(result, i),
                 placeholder="Select the build target to display")
 
-    def _on_select(self, items: List[str], index: int) -> None:
+    def _on_select(self, items: list[str], index: int) -> None:
         if index >= 0 and (session := self.session_by_name(self.session_name)):
             root = session.get_workspace_folders()[0]
             target_name = items[index]
-            path  = os.path.join(root.uri(), target_name)
+            path = f"{root.uri().rstrip('/')}/{target_name}"
             self.view.run_command("lsp_metals_file_decoder", {"decoding_type": "metals-buildtarget", "file_path": path})

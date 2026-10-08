@@ -1,0 +1,32 @@
+LSP-metals 0.22.0
+
+BREAKING CHANGE: the session name changed from "metals" to "LSP-metals"
+
+If you override LSP-metals settings in your project settings
+(Project > Edit Project), rename the "metals" key to "LSP-metals":
+
+Before:
+
+    {
+        "settings": {
+            "LSP": {
+                "metals": {
+                    // ...
+                }
+            }
+        }
+    }
+
+After:
+
+    {
+        "settings": {
+            "LSP": {
+                "LSP-metals": {
+                    // ...
+                }
+            }
+        }
+    }
+
+Settings under the old "metals" key are no longer applied.
